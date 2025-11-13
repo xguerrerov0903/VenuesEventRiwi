@@ -8,4 +8,5 @@ public interface IEventRepository { // IEventRepository
     Optional<EventEntity> findById(Long id);
     EventEntity save(EventEntity event);
     void deleteById(Long id);
+    void updateById (Long id, EventEntity event);
 }

@@ -35,10 +35,10 @@ public class VenueRepositoryH2 implements IVenueRepository {
         if (venue.getId() == null) {
             venue.setId(nextId.getAndIncrement());
             venues.add(venue);
-        } else {
-            findById(venue.getId()).ifPresent(existing -> {
-                existing.setName(venue.getName());
-            });
+        }  else {
+            throw new RuntimeException("Cannot save venue: Venue already exists and this method is incorrectly configured for update.");
+
+
         }
         return venue;
     }
@@ -46,5 +46,12 @@ public class VenueRepositoryH2 implements IVenueRepository {
     @Override
     public void deleteById(Long id) {
         venues.removeIf(v -> v.getId().equals(id));
+    }
+
+    @Override
+    public void updateById(Long id, VenueEntity venue) {
+        findById(id).ifPresent(existing -> {
+            existing.setName(venue.getName());
+        });
     }
 }

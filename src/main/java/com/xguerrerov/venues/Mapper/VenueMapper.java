@@ -11,12 +11,12 @@ public interface VenueMapper {
 
     VenueMapper mapper = Mappers.getMapper(VenueMapper.class);
 
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "name", source = "name")
+    @Mapping(target = "id", source = "venueEntity.id")
+    @Mapping(target = "name", source = "venueEntity.name")
     VenueDTO toDto(VenueEntity venueEntity);
 
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "name", source = "name")
+    @Mapping(target = "name", source = "venueDTO.name")
     VenueEntity toEntity(VenueDTO venueDTO);
 }

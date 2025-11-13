@@ -8,4 +8,5 @@ public interface IVenueRepository { // IVenueRepository
     Optional<VenueEntity> findById(Long id);
     VenueEntity save(VenueEntity venue);
     void deleteById(Long id);
+    void updateById (Long id, VenueEntity venue);
 }

@@ -1,4 +1,55 @@
 package com.xguerrerov.venues.Service.Impl;
 
-public class EventService {
+import com.xguerrerov.venues.DTO.EventDTO;
+import com.xguerrerov.venues.Entity.EventEntity;
+import com.xguerrerov.venues.Repository.Interface.IEventRepository;
+import com.xguerrerov.venues.Mapper.EventMapper;
+import com.xguerrerov.venues.Service.Interface.IEventService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class EventService implements IEventService {
+
+    private final IEventRepository repository;
+    private final EventMapper mapper;
+
+    @Override
+    public EventDTO create(EventDTO eventDTO) {
+        EventEntity entity = mapper.toEntity(eventDTO);
+        EventEntity saved = repository.save(entity);
+        return mapper.toDto(saved);
+    }
+
+    @Override
+    public List<EventDTO> findAll() {
+        return repository.findAll().stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public EventDTO findById(Long id) {
+        return repository.findById(id)
+                .map(mapper::toDto)
+                .orElseThrow(() -> new RuntimeException("Event not found (404)"));
+    }
+
+    @Override
+    public EventDTO update(Long id, EventDTO eventDTO) {
+        repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found for update (404)"));
+        EventEntity entityToUpdate = mapper.toEntity(eventDTO);
+        entityToUpdate.setId(id);
+        EventEntity updatedEntity = repository.save(entityToUpdate);
+        return mapper.toDto(updatedEntity);
+    }
+
+    @Override
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
 }
