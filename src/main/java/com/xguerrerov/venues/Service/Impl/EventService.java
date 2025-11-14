@@ -2,6 +2,7 @@ package com.xguerrerov.venues.Service.Impl;
 
 import com.xguerrerov.venues.DTO.EventDTO;
 import com.xguerrerov.venues.Entity.EventEntity;
+import com.xguerrerov.venues.Exception.NotFoundException;
 import com.xguerrerov.venues.Repository.Interface.IEventRepository;
 import com.xguerrerov.venues.Mapper.EventMapper;
 import com.xguerrerov.venues.Service.Interface.IEventService;
@@ -35,13 +36,13 @@ public class EventService implements IEventService {
     public EventDTO findById(Long id) {
         return repository.findById(id)
                 .map(mapper::toDto)
-                .orElseThrow(() -> new RuntimeException("Event not found (404)"));
+                .orElseThrow(() -> new NotFoundException("Event with id " + id + " not found"));
     }
 
     @Override
     public EventDTO update(Long id, EventDTO eventDTO) {
         repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Event not found for update (404)"));
+                .orElseThrow(() -> new NotFoundException("Event with id " + id + " not found for update"));
         EventEntity entityToUpdate = mapper.toEntity(eventDTO);
         entityToUpdate.setId(id);
         EventEntity updatedEntity = repository.save(entityToUpdate);
@@ -50,6 +51,8 @@ public class EventService implements IEventService {
 
     @Override
     public void delete(Long id) {
+        repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Event with id " + id + " not found for delete"));
         repository.deleteById(id);
     }
 }

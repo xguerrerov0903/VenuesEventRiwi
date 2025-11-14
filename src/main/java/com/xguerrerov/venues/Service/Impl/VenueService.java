@@ -3,6 +3,7 @@ package com.xguerrerov.venues.Service.Impl;
 import com.xguerrerov.venues.DTO.VenueDTO;
 import com.xguerrerov.venues.Entity.EventEntity;
 import com.xguerrerov.venues.Entity.VenueEntity;
+import com.xguerrerov.venues.Exception.NotFoundException;
 import com.xguerrerov.venues.Mapper.VenueMapper;
 import com.xguerrerov.venues.Repository.Interface.IVenueRepository;
 import com.xguerrerov.venues.Service.Interface.IVenueService;
@@ -37,13 +38,13 @@ public class VenueService implements IVenueService {
     public VenueDTO findById(Long id) {
         return repository.findById(id)
                 .map(mapper::toDto)
-                .orElseThrow(() -> new RuntimeException("Venue not found (404)"));
+                .orElseThrow(() -> new NotFoundException("Venue with id " + id + " not found"));
     }
 
     @Override
     public VenueDTO update(Long id, VenueDTO venueDTO) {
         repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Venue not found for update (404)"));
+                .orElseThrow(() -> new NotFoundException("Venue with id " + id + " not found for update"));
         VenueEntity entityToUpdate = mapper.toEntity(venueDTO);
         entityToUpdate.setId(id);
         VenueEntity updatedEntity = repository.save(entityToUpdate);
@@ -52,6 +53,8 @@ public class VenueService implements IVenueService {
 
     @Override
     public void delete(Long id) {
+        repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Venue with id " + id + " not found for delete"));
         repository.deleteById(id);
     }
 }
