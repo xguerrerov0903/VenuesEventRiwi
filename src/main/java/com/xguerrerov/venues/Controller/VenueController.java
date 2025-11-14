@@ -4,6 +4,10 @@ package com.xguerrerov.venues.Controller;
 import com.xguerrerov.venues.DTO.VenueDTO;
 import com.xguerrerov.venues.Service.Interface.IVenueService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,27 +26,102 @@ public class VenueController {
 
     @Operation(
             summary = "Create a new venue",
-            description = "Creates a new venue in the in-memory catalog"
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "Create Venue Example",
+                                    value = """
+                                        {
+                                          "name": "Expo Center",
+                                          "location": "South District",
+                                          "capacity": 900
+                                        }
+                                        """
+                            )
+                    )
+            )
     )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Venue created",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    value = """
+                                        {
+                                          "id": 3,
+                                          "name": "Expo Center",
+                                          "location": "South District",
+                                          "capacity": 900
+                                        }
+                                        """
+                            )
+                    )
+            ),
+            @ApiResponse(responseCode = "400", description = "Invalid venue data", content = @Content)
+    })
     @PostMapping
     public ResponseEntity<VenueDTO> createVenue(@Valid @RequestBody VenueDTO venueDTO) {
         VenueDTO created = service.create(venueDTO);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    @Operation(
-            summary = "Get all venues",
-            description = "Returns all venues stored in memory"
-    )
+    @Operation(summary = "Get all venues")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "List of venues",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    value = """
+                                        [
+                                          {
+                                            "id": 1,
+                                            "name": "Main Hall",
+                                            "location": "Downtown",
+                                            "capacity": 500
+                                          },
+                                          {
+                                            "id": 2,
+                                            "name": "North Arena",
+                                            "location": "Industrial Zone",
+                                            "capacity": 1200
+                                          }
+                                        ]
+                                        """
+                            )
+                    )
+            )
+    })
     @GetMapping
     public ResponseEntity<List<VenueDTO>> getAllVenues() {
         return ResponseEntity.ok(service.findAll());
     }
 
-    @Operation(
-            summary = "Get venue by ID",
-            description = "Returns a single venue given its ID"
-    )
+    @Operation(summary = "Get a venue by ID")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Venue found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    value = """
+                                        {
+                                          "id": 1,
+                                          "name": "Main Hall",
+                                          "location": "Downtown",
+                                          "capacity": 500
+                                        }
+                                        """
+                            )
+                    )
+            ),
+            @ApiResponse(responseCode = "404", description = "Venue not found", content = @Content)
+    })
     @GetMapping("/{id}")
     public ResponseEntity<VenueDTO> getVenueById(@PathVariable Long id) {
         try {
@@ -54,9 +133,42 @@ public class VenueController {
     }
 
     @Operation(
-            summary = "Update venue by ID",
-            description = "Updates an existing venue if it exists"
+            summary = "Update an existing venue",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    value = """
+                                        {
+                                          "name": "Updated Hall",
+                                          "location": "Central Park",
+                                          "capacity": 700
+                                        }
+                                        """
+                            )
+                    )
+            )
     )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Venue updated",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    value = """
+                                        {
+                                          "id": 1,
+                                          "name": "Updated Hall",
+                                          "location": "Central Park",
+                                          "capacity": 700
+                                        }
+                                        """
+                            )
+                    )
+            ),
+            @ApiResponse(responseCode = "404", description = "Venue not found", content = @Content)
+    })
     @PutMapping("/{id}")
     public ResponseEntity<VenueDTO> updateVenue(@PathVariable Long id, @Valid @RequestBody VenueDTO venueDTO) {
         try {
@@ -67,10 +179,11 @@ public class VenueController {
         }
     }
 
-    @Operation(
-            summary = "Delete venue by ID",
-            description = "Deletes a venue if it exists"
-    )
+    @Operation(summary = "Delete a venue by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Venue deleted"),
+            @ApiResponse(responseCode = "404", description = "Venue not found", content = @Content)
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVenue(@PathVariable Long id) {
         service.delete(id);
