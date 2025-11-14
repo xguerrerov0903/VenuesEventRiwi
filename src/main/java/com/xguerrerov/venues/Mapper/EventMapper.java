@@ -6,10 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface EventMapper {
 
-    EventMapper mapper = Mappers.getMapper(EventMapper.class);
 
     @Mapping(target = "id", source = "eventEntity.id")
     @Mapping(target = "name", source = "eventEntity.name")
