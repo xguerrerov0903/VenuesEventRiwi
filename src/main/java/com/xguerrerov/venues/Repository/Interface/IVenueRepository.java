@@ -1,12 +1,11 @@
 package com.xguerrerov.venues.Repository.Interface;
+
 import com.xguerrerov.venues.Entity.VenueEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.List;
 import java.util.Optional;
 
-public interface IVenueRepository { // IVenueRepository
-    List<VenueEntity> findAll();
-    Optional<VenueEntity> findById(Long id);
-    VenueEntity save(VenueEntity venue);
-    void deleteById(Long id);
-    void updateById (Long id, VenueEntity venue);
+public interface IVenueRepository  extends JpaRepository<VenueEntity, Long> { // IVenueRepository
+
 }

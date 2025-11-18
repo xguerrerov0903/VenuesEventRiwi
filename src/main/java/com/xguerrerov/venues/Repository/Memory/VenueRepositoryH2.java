@@ -1,4 +1,4 @@
-package com.xguerrerov.venues.Repository.Impl;
+package com.xguerrerov.venues.Repository.Memory;
 
 import com.xguerrerov.venues.Entity.VenueEntity;
 import com.xguerrerov.venues.Repository.Interface.IVenueRepository;
