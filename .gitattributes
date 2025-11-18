@@ -1,2 +1,5 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+application.properties text eol=lf
+*.java text eol=lf
+*.xml text eol=lf

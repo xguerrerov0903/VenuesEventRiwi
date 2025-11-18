@@ -32,4 +32,9 @@ public class EventEntity implements Event {
     @Column(nullable = false)
     private Long venueId;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "venue_id", nullable = false)
+    @ToString.Exclude
+    private VenueEntity venue;
+
 }

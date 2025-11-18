@@ -3,6 +3,8 @@ import com.xguerrerov.venues.Model.Venue;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -20,5 +22,9 @@ public class VenueEntity implements Venue {
 
     @Column(nullable = false, unique = true)
     private String name;
+
+    @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<EventEntity> events;
 
 }
