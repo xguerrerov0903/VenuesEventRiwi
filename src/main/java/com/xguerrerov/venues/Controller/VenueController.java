@@ -98,7 +98,7 @@ public class VenueController {
     })
     @GetMapping
     public ResponseEntity<List<VenueDTO>> getAllVenues() {
-        return ResponseEntity.ok(service.findAll());
+        return ResponseEntity.ok(service.getAll());
     }
 
     @Operation(summary = "Get a venue by ID")
@@ -125,7 +125,7 @@ public class VenueController {
     @GetMapping("/{id}")
     public ResponseEntity<VenueDTO> getVenueById(@PathVariable Long id) {
         try {
-            VenueDTO venue = service.findById(id);
+            VenueDTO venue = service.getById(id);
             return ResponseEntity.ok(venue);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();

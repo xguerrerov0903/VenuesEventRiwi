@@ -97,7 +97,7 @@ public class EventController {
     })
     @GetMapping
     public ResponseEntity<List<EventDTO>> getAllEvents() {
-        return ResponseEntity.ok(service.findAll());
+        return ResponseEntity.ok(service.getAll());
     }
 
     @Operation(summary = "Get an event by ID")
@@ -124,7 +124,7 @@ public class EventController {
     @GetMapping("/{id}")
     public ResponseEntity<EventDTO> getEventById(@PathVariable Long id) {
         try {
-            EventDTO event = service.findById(id);
+            EventDTO event = service.getById(id);
             return ResponseEntity.ok(event);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();

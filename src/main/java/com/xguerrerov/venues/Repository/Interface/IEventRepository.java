@@ -6,6 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IEventRepository extends JpaRepository <EventEntity, Long> {
-    // IEventRepository
-
+    Optional<EventEntity> findByName(String name);
+    List<EventEntity> findByVenueId(Long venueId);
 }

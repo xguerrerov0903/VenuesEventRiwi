@@ -4,8 +4,8 @@ import java.util.List;
 
 public interface IVenueService {
     VenueDTO create(VenueDTO venueDTO);
-    List<VenueDTO> findAll();
-    VenueDTO findById(Long id);
+    List<VenueDTO> getAll();
+    VenueDTO getById(Long id);
     VenueDTO update(Long id, VenueDTO venueDTO);
     void delete(Long id);
 }
