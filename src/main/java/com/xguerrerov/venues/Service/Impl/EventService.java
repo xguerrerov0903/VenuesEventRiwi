@@ -58,7 +58,7 @@ public class EventService implements IEventService {
                     throw new IllegalArgumentException("Event with name " + eventDTO.getName() + " already exists");
                 });
         existing.setName(eventDTO.getName());
-        existing.setDate(eventDTO.getDate());
+        existing.setDateBegin(eventDTO.getDateBegin());
         existing.setDescription(eventDTO.getDescription());
         existing.setVenueId(eventDTO.getVenueId());
         EventEntity updated = repository.save(existing);
@@ -84,7 +84,28 @@ public class EventService implements IEventService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<EventDTO> getEventsByCategory(String category) {
+        List<EventEntity> events = repository.findByCategory(category);
+        if (events.isEmpty()) {
+            throw new NotFoundException("No events found for category " + category);
+        }
+        return events
+                .stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
 
-
+    @Override
+    public List<EventDTO> getEventsByDateBegin(java.time.LocalDate dateBegin) {
+        List<EventEntity> events = repository.findByDateBegin(dateBegin);
+        if (events.isEmpty()) {
+            throw new NotFoundException("No events found for date " + dateBegin);
+        }
+        return events
+                .stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
 
 }

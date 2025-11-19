@@ -8,4 +8,5 @@ public interface IVenueService {
     VenueDTO getById(Long id);
     VenueDTO update(Long id, VenueDTO venueDTO);
     void delete(Long id);
+    List<VenueDTO> getVenueByCity(String city);
 }

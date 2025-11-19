@@ -1,7 +1,6 @@
 package com.xguerrerov.venues.Service.Impl;
 
 import com.xguerrerov.venues.DTO.VenueDTO;
-import com.xguerrerov.venues.Entity.EventEntity;
 import com.xguerrerov.venues.Entity.VenueEntity;
 import com.xguerrerov.venues.Exception.NotFoundException;
 import com.xguerrerov.venues.Mapper.VenueMapper;
@@ -65,4 +64,17 @@ public class VenueService implements IVenueService {
                 .orElseThrow(() -> new NotFoundException("Venue with id " + id + " not found for delete"));
         repository.deleteById(id);
     }
+
+    @Override
+    public List<VenueDTO> getVenueByCity(String city){
+        List<VenueEntity> venues = repository.findByCity(city);
+        if (venues.isEmpty()) {
+            throw new NotFoundException("No venues found for city " + city);
+        }
+        return venues
+                .stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 }

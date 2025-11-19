@@ -10,4 +10,6 @@ public interface IEventService {
     EventDTO update(Long id, EventDTO eventDTO);
     void delete(Long id);
     List<EventDTO> getEventsByVenueId(Long venueId);
+    List<EventDTO> getEventsByCategory(String category);
+    List<EventDTO> getEventsByDateBegin(java.time.LocalDate dateBegin);
 }

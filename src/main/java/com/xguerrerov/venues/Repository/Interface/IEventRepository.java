@@ -7,5 +7,7 @@ import java.util.Optional;
 
 public interface IEventRepository extends JpaRepository <EventEntity, Long> {
     Optional<EventEntity> findByName(String name);
+    List<EventEntity> findByCategory(String category);
+    List<EventEntity> findByDateBegin(java.time.LocalDate dateBegin);
     List<EventEntity> findByVenueId(Long venueId);
 }

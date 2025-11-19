@@ -25,9 +25,13 @@ public class EventEntity implements Event {
     private String name;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private LocalDate dateBegin;
 
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Category category;
 
     @Column(nullable = false)
     private Long venueId;
@@ -36,5 +40,11 @@ public class EventEntity implements Event {
     @JoinColumn(name = "venue_id", nullable = false)
     @ToString.Exclude
     private VenueEntity venue;
+
+    @PrePersist
+    @PreUpdate
+    public void normalizeData() {
+        if (this.name != null) this.name = this.name.toUpperCase();
+    }
 
 }

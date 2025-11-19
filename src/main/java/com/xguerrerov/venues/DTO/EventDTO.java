@@ -1,5 +1,7 @@
 package com.xguerrerov.venues.DTO;
 
+import com.xguerrerov.venues.Entity.Category;
+import com.xguerrerov.venues.Utils.ValueOfEnum;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -15,9 +17,13 @@ public class EventDTO {
 
     @NotNull(message = "Event date is required")
     @Future(message = "Event date must be in the future")
-    private LocalDate date;
+    private LocalDate dateBegin;
 
     private String description;
+
+    @NotBlank(message = "Event category cannot be empty")
+    @ValueOfEnum(enumClass = Category.class, message = "La categoría debe ser: NORMAL, CRAZY o BORING")
+    private String category;
 
     @NotNull(message = "Venue ID is required for the event")
     private Long venueId;
