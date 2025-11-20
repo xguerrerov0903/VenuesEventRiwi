@@ -10,9 +10,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -32,7 +38,9 @@ public class EventController {
                                     value = """
                                         {
                                           "name": "Gaming Convention",
-                                          "date": "2025-03-15",
+                                          "dateBegin": "2030-03-15",
+                                          "description": "Video game expo with tournaments and talks",
+                                          "category": "CRAZY",
                                           "venueId": 2
                                         }
                                         """
@@ -51,7 +59,9 @@ public class EventController {
                                         {
                                           "id": 3,
                                           "name": "Gaming Convention",
-                                          "date": "2025-03-15",
+                                          "dateBegin": "2030-03-15",
+                                          "description": "Video game expo with tournaments and talks",
+                                          "category": "CRAZY",
                                           "venueId": 2
                                         }
                                         """
@@ -66,7 +76,6 @@ public class EventController {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-
     @Operation(summary = "Get all events")
     @ApiResponses({
             @ApiResponse(
@@ -80,13 +89,17 @@ public class EventController {
                                           {
                                             "id": 1,
                                             "name": "Rock Concert",
-                                            "date": "2025-01-20",
+                                            "dateBegin": "2030-01-20",
+                                            "description": "Classic rock live show",
+                                            "category": "NORMAL",
                                             "venueId": 1
                                           },
                                           {
                                             "id": 2,
                                             "name": "Tech Expo",
-                                            "date": "2025-02-05",
+                                            "dateBegin": "2030-02-05",
+                                            "description": "Technology and innovation fair",
+                                            "category": "BORING",
                                             "venueId": 2
                                           }
                                         ]
@@ -112,7 +125,9 @@ public class EventController {
                                         {
                                           "id": 1,
                                           "name": "Rock Concert",
-                                          "date": "2025-01-20",
+                                          "dateBegin": "2030-01-20",
+                                          "description": "Classic rock live show",
+                                          "category": "NORMAL",
                                           "venueId": 1
                                         }
                                         """
@@ -123,12 +138,8 @@ public class EventController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<EventDTO> getEventById(@PathVariable Long id) {
-        try {
-            EventDTO event = service.getById(id);
-            return ResponseEntity.ok(event);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        EventDTO event = service.getById(id);
+        return ResponseEntity.ok(event);
     }
 
     @Operation(
@@ -140,7 +151,9 @@ public class EventController {
                                     value = """
                                         {
                                           "name": "Updated Concert",
-                                          "date": "2025-04-10",
+                                          "dateBegin": "2030-04-10",
+                                          "description": "Updated description with new artists",
+                                          "category": "NORMAL",
                                           "venueId": 1
                                         }
                                         """
@@ -159,7 +172,9 @@ public class EventController {
                                         {
                                           "id": 1,
                                           "name": "Updated Concert",
-                                          "date": "2025-04-10",
+                                          "dateBegin": "2030-04-10",
+                                          "description": "Updated description with new artists",
+                                          "category": "NORMAL",
                                           "venueId": 1
                                         }
                                         """
@@ -170,12 +185,8 @@ public class EventController {
     })
     @PutMapping("/{id}")
     public ResponseEntity<EventDTO> updateEvent(@PathVariable Long id, @Valid @RequestBody EventDTO eventDto) {
-        try {
-            EventDTO updated = service.update(id, eventDto);
-            return ResponseEntity.ok(updated);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        EventDTO updated = service.update(id, eventDto);
+        return ResponseEntity.ok(updated);
     }
 
     @Operation(summary = "Delete an event by ID")
@@ -187,5 +198,141 @@ public class EventController {
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "Get all events with pagination",
+            description = "Returns a paginated list of events. Default page size is 5, sorted by id."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Page of events",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    value = """
+                                        {
+                                          "content": [
+                                            {
+                                              "id": 1,
+                                              "name": "Rock Concert",
+                                              "dateBegin": "2030-01-20",
+                                              "description": "Classic rock live show",
+                                              "category": "NORMAL",
+                                              "venueId": 1
+                                            },
+                                            {
+                                              "id": 2,
+                                              "name": "Tech Expo",
+                                              "dateBegin": "2030-02-05",
+                                              "description": "Technology and innovation fair",
+                                              "category": "BORING",
+                                              "venueId": 2
+                                            }
+                                          ],
+                                          "pageable": {
+                                            "pageNumber": 0,
+                                            "pageSize": 5
+                                          },
+                                          "totalElements": 2,
+                                          "totalPages": 1,
+                                          "last": true,
+                                          "first": true
+                                        }
+                                        """
+                            )
+                    )
+            )
+    })
+    @GetMapping("/paged")
+    public ResponseEntity<Page<EventDTO>> getAllEventsPaged(
+            @PageableDefault(size = 5, sort = "id") Pageable pageable
+    ) {
+        Page<EventDTO> page = service.getAllPaged(pageable);
+        return ResponseEntity.ok(page);
+    }
+
+    @Operation(
+            summary = "Get events by start date",
+            description = "Returns all events whose dateBegin matches the given date."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "List of events for the given start date",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    value = """
+                                        [
+                                          {
+                                            "id": 5,
+                                            "name": "Indie Festival",
+                                            "dateBegin": "2030-06-01",
+                                            "description": "Local indie bands all day long",
+                                            "category": "CRAZY",
+                                            "venueId": 3
+                                          }
+                                        ]
+                                        """
+                            )
+                    )
+            )
+    })
+    @GetMapping("/by-date")
+    public ResponseEntity<List<EventDTO>> getEventsByDate(
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate dateBegin
+    ) {
+        List<EventDTO> events = service.getEventsByDateBegin(dateBegin);
+        return ResponseEntity.ok(events);
+    }
+
+    @Operation(
+            summary = "Get events by category with pagination",
+            description = "Returns a paginated list of events filtered by category. Valid values: NORMAL, CRAZY, BORING."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Page of events for the given category",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    value = """
+                                        {
+                                          "content": [
+                                            {
+                                              "id": 10,
+                                              "name": "Frontend Conference",
+                                              "dateBegin": "2030-09-10",
+                                              "description": "Talks and workshops about modern frontend",
+                                              "category": "BORING",
+                                              "venueId": 4
+                                            }
+                                          ],
+                                          "pageable": {
+                                            "pageNumber": 0,
+                                            "pageSize": 5
+                                          },
+                                          "totalElements": 1,
+                                          "totalPages": 1,
+                                          "last": true,
+                                          "first": true
+                                        }
+                                        """
+                            )
+                    )
+            )
+    })
+    @GetMapping("/by-category")
+    public ResponseEntity<Page<EventDTO>> getEventsByCategory(
+            @RequestParam String category,
+            @PageableDefault(size = 5, sort = "dateBegin") Pageable pageable
+    ) {
+        Page<EventDTO> page = service.getEventsByCategory(category, pageable);
+        return ResponseEntity.ok(page);
     }
 }

@@ -2,6 +2,7 @@ package com.xguerrerov.venues.Service.Impl;
 
 import com.xguerrerov.venues.DTO.EventDTO;
 import com.xguerrerov.venues.Entity.EventEntity;
+import com.xguerrerov.venues.Exception.DuplicateResourceException;
 import com.xguerrerov.venues.Exception.NotFoundException;
 import com.xguerrerov.venues.Repository.Interface.IEventRepository;
 import com.xguerrerov.venues.Mapper.EventMapper;
@@ -10,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +26,8 @@ public class EventService implements IEventService {
     public EventDTO create(EventDTO eventDTO) {
         EventEntity entity = mapper.toEntity(eventDTO);
         if (repository.findByName(entity.getName()).isPresent()){
-            throw new IllegalArgumentException("Event with name " + entity.getName() + " already exists");
+            throw new DuplicateResourceException("Event with name '" + entity.getName() + "' already exists"
+            );
         }
         EventEntity saved = repository.save(entity);
         return mapper.toDto(saved);
@@ -55,7 +60,7 @@ public class EventService implements IEventService {
         repository.findByName(eventDTO.getName())
                 .filter(other -> !other.getId().equals(id))
                 .ifPresent(other -> {
-                    throw new IllegalArgumentException("Event with name " + eventDTO.getName() + " already exists");
+                    throw new DuplicateResourceException("Event with name '" + eventDTO.getName() + "' already exists");
                 });
         existing.setName(eventDTO.getName());
         existing.setDateBegin(eventDTO.getDateBegin());
@@ -85,18 +90,6 @@ public class EventService implements IEventService {
     }
 
     @Override
-    public List<EventDTO> getEventsByCategory(String category) {
-        List<EventEntity> events = repository.findByCategory(category);
-        if (events.isEmpty()) {
-            throw new NotFoundException("No events found for category " + category);
-        }
-        return events
-                .stream()
-                .map(mapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<EventDTO> getEventsByDateBegin(java.time.LocalDate dateBegin) {
         List<EventEntity> events = repository.findByDateBegin(dateBegin);
         if (events.isEmpty()) {
@@ -107,5 +100,26 @@ public class EventService implements IEventService {
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Page<EventDTO> getAllPaged(Pageable pageable) {
+        var page = repository.findAll(pageable);
+
+        if (page.isEmpty()) {
+            throw new NotFoundException("No events found");
+        }
+
+        return page.map(mapper::toDto);
+    }
+
+    @Override
+    public Page<EventDTO> getEventsByCategory(String category, Pageable pageable) {
+        var page = repository.findByCategory(category, pageable);
+        if (page.isEmpty()) {
+            throw new NotFoundException("No events found for category " + category);
+        }
+        return page.map(mapper::toDto);
+    }
+
 
 }

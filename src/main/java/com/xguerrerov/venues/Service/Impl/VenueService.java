@@ -2,6 +2,7 @@ package com.xguerrerov.venues.Service.Impl;
 
 import com.xguerrerov.venues.DTO.VenueDTO;
 import com.xguerrerov.venues.Entity.VenueEntity;
+import com.xguerrerov.venues.Exception.DuplicateResourceException;
 import com.xguerrerov.venues.Exception.NotFoundException;
 import com.xguerrerov.venues.Mapper.VenueMapper;
 import com.xguerrerov.venues.Repository.Interface.IVenueRepository;
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +27,7 @@ public class VenueService implements IVenueService {
     public VenueDTO create(VenueDTO venueDTO) {
         VenueEntity entity = mapper.toEntity(venueDTO);
         if (repository.findByName(entity.getName()).isPresent()) {
-            throw new IllegalArgumentException("Venue with name " + entity.getName() + " already exists");
+            throw new DuplicateResourceException("Venue with name '" + venueDTO.getName() + "' already exists");
         }
         VenueEntity saved = repository.save(entity);
         return mapper.toDto(saved);
@@ -50,12 +54,20 @@ public class VenueService implements IVenueService {
 
     @Override
     public VenueDTO update(Long id, VenueDTO venueDTO) {
-        repository.findById(id)
+
+        VenueEntity existing = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Venue with id " + id + " not found for update"));
-        VenueEntity entityToUpdate = mapper.toEntity(venueDTO);
-        entityToUpdate.setId(id);
-        VenueEntity updatedEntity = repository.save(entityToUpdate);
-        return mapper.toDto(updatedEntity);
+        repository.findByName(venueDTO.getName())
+                .filter(other -> !other.getId().equals(id))
+                .ifPresent(other -> {
+                    throw new DuplicateResourceException(
+                            "Venue with name '" + venueDTO.getName() + "' already exists"
+                    );
+                });
+        existing.setName(venueDTO.getName());
+        existing.setCity(venueDTO.getCity());
+        VenueEntity updated = repository.save(existing);
+        return mapper.toDto(updated);
     }
 
     @Override
@@ -76,5 +88,17 @@ public class VenueService implements IVenueService {
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Page<VenueDTO> getAllPaged(Pageable pageable) {
+        var page = repository.findAll(pageable);
+
+        if (page.isEmpty()) {
+            throw new NotFoundException("No venues found");
+        }
+
+        return page.map(mapper::toDto);
+    }
+
 
 }
