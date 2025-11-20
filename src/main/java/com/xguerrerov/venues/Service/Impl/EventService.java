@@ -2,10 +2,12 @@ package com.xguerrerov.venues.Service.Impl;
 
 import com.xguerrerov.venues.DTO.EventDTO;
 import com.xguerrerov.venues.Entity.EventEntity;
+import com.xguerrerov.venues.Entity.VenueEntity;
 import com.xguerrerov.venues.Exception.DuplicateResourceException;
 import com.xguerrerov.venues.Exception.NotFoundException;
 import com.xguerrerov.venues.Repository.Interface.IEventRepository;
 import com.xguerrerov.venues.Mapper.EventMapper;
+import com.xguerrerov.venues.Repository.Interface.IVenueRepository;
 import com.xguerrerov.venues.Service.Interface.IEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,17 +23,28 @@ public class EventService implements IEventService {
 
     private final IEventRepository repository;
     private final EventMapper mapper;
+    private final IVenueRepository venueRepository;
+
 
     @Override
-    public EventDTO create(EventDTO eventDTO) {
-        EventEntity entity = mapper.toEntity(eventDTO);
-        if (repository.findByName(entity.getName()).isPresent()){
-            throw new DuplicateResourceException("Event with name '" + entity.getName() + "' already exists"
-            );
-        }
+    public EventDTO create(EventDTO dto) {
+        repository.findByName(dto.getName())
+                .ifPresent(existing -> {
+                    throw new DuplicateResourceException(
+                            "Event with name '" + dto.getName() + "' already exists"
+                    );
+                });
+        VenueEntity venue = venueRepository.findById(dto.getVenueId())
+                .orElseThrow(() -> new NotFoundException(
+                        "Venue with id " + dto.getVenueId() + " not found"
+                ));
+        EventEntity entity = mapper.toEntity(dto);
+        entity.setVenue(venue);
+
         EventEntity saved = repository.save(entity);
         return mapper.toDto(saved);
     }
+
 
     @Override
     public List<EventDTO> getAll() {
@@ -54,21 +67,34 @@ public class EventService implements IEventService {
     }
 
     @Override
-    public EventDTO update(Long id, EventDTO eventDTO) {
+    public EventDTO update(Long id, EventDTO dto) {
+
         EventEntity existing = repository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Event with id " + id + " not found for update"));
-        repository.findByName(eventDTO.getName())
+                .orElseThrow(() -> new NotFoundException(
+                        "Event with id " + id + " not found for update"
+                ));
+
+        repository.findByName(dto.getName())
                 .filter(other -> !other.getId().equals(id))
                 .ifPresent(other -> {
-                    throw new DuplicateResourceException("Event with name '" + eventDTO.getName() + "' already exists");
+                    throw new DuplicateResourceException(
+                            "Event with name '" + dto.getName() + "' already exists"
+                    );
                 });
-        existing.setName(eventDTO.getName());
-        existing.setDateBegin(eventDTO.getDateBegin());
-        existing.setDescription(eventDTO.getDescription());
-        existing.setVenueId(eventDTO.getVenueId());
+        VenueEntity venue = venueRepository.findById(dto.getVenueId())
+                .orElseThrow(() -> new NotFoundException(
+                        "Venue with id " + dto.getVenueId() + " not found"
+                ));
+        existing.setName(dto.getName());
+        existing.setDateBegin(dto.getDateBegin());
+        existing.setDescription(dto.getDescription());
+        existing.setCategory(dto.getCategory());
+        existing.setVenue(venue);
+
         EventEntity updated = repository.save(existing);
         return mapper.toDto(updated);
     }
+
 
     @Override
     public void delete(Long id) {

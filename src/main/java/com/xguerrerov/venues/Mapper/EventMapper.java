@@ -9,21 +9,9 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring")
 public interface EventMapper {
 
+    @Mapping(target = "venueId", source = "venue.id")
+    EventDTO toDto(EventEntity entity);
 
-    @Mapping(target = "id", source = "eventEntity.id")
-    @Mapping(target = "name", source = "eventEntity.name")
-    @Mapping(target = "dateBegin", source = "eventEntity.dateBegin")
-    @Mapping(target = "description", source = "eventEntity.description")
-    @Mapping(target = "category", source = "eventEntity.category")
-    @Mapping(target = "venueId", source = "eventEntity.venueId")
-    EventDTO toDto(EventEntity eventEntity);
-
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "name", source = "eventDTO.name")
-    @Mapping(target = "dateBegin", source = "eventDTO.dateBegin")
-    @Mapping(target = "description", source = "eventDTO.description")
-    @Mapping(target = "category", source = "eventDTO.category")
-    @Mapping(target = "venueId", source = "eventDTO.venueId")
-    EventEntity toEntity(EventDTO eventDTO);
+    @Mapping(target = "venue", ignore = true) // se asigna en el service
+    EventEntity toEntity(EventDTO dto);
 }

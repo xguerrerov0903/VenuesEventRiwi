@@ -1,6 +1,7 @@
 package com.xguerrerov.venues.DTO;
 
 import com.xguerrerov.venues.Entity.Category;
+import com.xguerrerov.venues.Model.Venue;
 import com.xguerrerov.venues.Utils.ValueOfEnum;
 import jakarta.validation.constraints.*;
 import lombok.*;

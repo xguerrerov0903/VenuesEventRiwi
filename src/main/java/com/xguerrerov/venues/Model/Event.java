@@ -1,5 +1,5 @@
 package com.xguerrerov.venues.Model;
-
+import com.xguerrerov.venues.Entity.VenueEntity;
 
 public interface Event {
     Long getId();
@@ -7,5 +7,6 @@ public interface Event {
     java.time.LocalDate getDateBegin();
     String getCategory();
     String getDescription();
-    Long getVenueId();
+    VenueEntity getVenue();
+
 }

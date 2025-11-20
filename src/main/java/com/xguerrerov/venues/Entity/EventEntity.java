@@ -29,15 +29,11 @@ public class EventEntity implements Event {
 
     private String description;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Category category;
-
-    @Column(nullable = false)
-    private Long venueId;
+    private String category;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "venue_id", nullable = false)
+    @JoinColumn(name = "venueId", nullable = false)
     @ToString.Exclude
     private VenueEntity venue;
 

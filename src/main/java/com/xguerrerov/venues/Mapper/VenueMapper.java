@@ -13,10 +13,13 @@ public interface VenueMapper {
 
     @Mapping(target = "id", source = "venueEntity.id")
     @Mapping(target = "name", source = "venueEntity.name")
+    @Mapping(target = "city", source = "venueEntity.city")
     VenueDTO toDto(VenueEntity venueEntity);
 
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "name", source = "venueDTO.name")
+    @Mapping(target = "city", source = "venueDTO.city")
+    @Mapping(target = "events", ignore = true)
     VenueEntity toEntity(VenueDTO venueDTO);
 }
