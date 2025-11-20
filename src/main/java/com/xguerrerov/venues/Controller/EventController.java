@@ -29,12 +29,22 @@ public class EventController {
 
     private final IEventService service;
 
+    // ----------------------------------------------------------------------
+    // CREATE EVENT
+    // ----------------------------------------------------------------------
     @Operation(
             summary = "Create a new event",
+            description = """
+                Creates a new event associated with an existing venue.
+                
+                Example URL:
+                - POST /events
+                """,
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(
+                                    name = "Create Event Example",
                                     value = """
                                         {
                                           "name": "Gaming Convention",
@@ -49,25 +59,7 @@ public class EventController {
             )
     )
     @ApiResponses({
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "Event created",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(
-                                    value = """
-                                        {
-                                          "id": 3,
-                                          "name": "Gaming Convention",
-                                          "dateBegin": "2030-03-15",
-                                          "description": "Video game expo with tournaments and talks",
-                                          "category": "CRAZY",
-                                          "venueId": 2
-                                        }
-                                        """
-                            )
-                    )
-            ),
+            @ApiResponse(responseCode = "201", description = "Event created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid event data", content = @Content)
     })
     @PostMapping
@@ -76,11 +68,22 @@ public class EventController {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Get all events")
+    // ----------------------------------------------------------------------
+    // GET ALL EVENTS
+    // ----------------------------------------------------------------------
+    @Operation(
+            summary = "Get all events",
+            description = """
+                Retrieves the full list of events.
+                
+                Example URL:
+                - GET /events
+                """
+    )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "List of events",
+                    description = "List of events retrieved successfully",
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(
@@ -113,27 +116,20 @@ public class EventController {
         return ResponseEntity.ok(service.getAll());
     }
 
-    @Operation(summary = "Get an event by ID")
+    // ----------------------------------------------------------------------
+    // GET EVENT BY ID
+    // ----------------------------------------------------------------------
+    @Operation(
+            summary = "Get an event by ID",
+            description = """
+                Retrieves a single event using its unique ID.
+                
+                Example URL:
+                - GET /events/1
+                """
+    )
     @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Event found",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(
-                                    value = """
-                                        {
-                                          "id": 1,
-                                          "name": "Rock Concert",
-                                          "dateBegin": "2030-01-20",
-                                          "description": "Classic rock live show",
-                                          "category": "NORMAL",
-                                          "venueId": 1
-                                        }
-                                        """
-                            )
-                    )
-            ),
+            @ApiResponse(responseCode = "200", description = "Event found"),
             @ApiResponse(responseCode = "404", description = "Event not found", content = @Content)
     })
     @GetMapping("/{id}")
@@ -142,12 +138,22 @@ public class EventController {
         return ResponseEntity.ok(event);
     }
 
+    // ----------------------------------------------------------------------
+    // UPDATE EVENT
+    // ----------------------------------------------------------------------
     @Operation(
             summary = "Update an existing event",
+            description = """
+                Updates an event by its ID.
+                
+                Example URL:
+                - PUT /events/1
+                """,
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(
+                                    name = "Update Event Example",
                                     value = """
                                         {
                                           "name": "Updated Concert",
@@ -162,25 +168,7 @@ public class EventController {
             )
     )
     @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Event updated",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(
-                                    value = """
-                                        {
-                                          "id": 1,
-                                          "name": "Updated Concert",
-                                          "dateBegin": "2030-04-10",
-                                          "description": "Updated description with new artists",
-                                          "category": "NORMAL",
-                                          "venueId": 1
-                                        }
-                                        """
-                            )
-                    )
-            ),
+            @ApiResponse(responseCode = "200", description = "Event updated successfully"),
             @ApiResponse(responseCode = "404", description = "Event not found", content = @Content)
     })
     @PutMapping("/{id}")
@@ -189,10 +177,21 @@ public class EventController {
         return ResponseEntity.ok(updated);
     }
 
-    @Operation(summary = "Delete an event by ID")
+    // ----------------------------------------------------------------------
+    // DELETE EVENT
+    // ----------------------------------------------------------------------
+    @Operation(
+            summary = "Delete an event by ID",
+            description = """
+                Deletes an event from the system.
+                
+                Example URL:
+                - DELETE /events/1
+                """
+    )
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Event deleted"),
-            @ApiResponse(responseCode = "404", description = "Event not found", content = @Content)
+            @ApiResponse(responseCode = "204", description = "Event deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Event not found")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
@@ -200,50 +199,30 @@ public class EventController {
         return ResponseEntity.noContent().build();
     }
 
+    // ----------------------------------------------------------------------
+    // PAGINATION
+    // ----------------------------------------------------------------------
     @Operation(
-            summary = "Get all events with pagination",
-            description = "Returns a paginated list of events. Default page size is 5, sorted by id."
+            summary = "Get paginated events",
+            description = """
+                Returns events using pagination.
+                
+                Default settings:
+                - page = 0
+                - size = 5
+                - sort = id,asc
+                
+                URL format:
+                - /events/paged?page={page}&size={size}&sort={field},{direction}
+                
+                Examples:
+                - /events/paged
+                - /events/paged?page=1&size=10
+                - /events/paged?sort=dateBegin,desc
+                """
     )
     @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Page of events",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(
-                                    value = """
-                                        {
-                                          "content": [
-                                            {
-                                              "id": 1,
-                                              "name": "Rock Concert",
-                                              "dateBegin": "2030-01-20",
-                                              "description": "Classic rock live show",
-                                              "category": "NORMAL",
-                                              "venueId": 1
-                                            },
-                                            {
-                                              "id": 2,
-                                              "name": "Tech Expo",
-                                              "dateBegin": "2030-02-05",
-                                              "description": "Technology and innovation fair",
-                                              "category": "BORING",
-                                              "venueId": 2
-                                            }
-                                          ],
-                                          "pageable": {
-                                            "pageNumber": 0,
-                                            "pageSize": 5
-                                          },
-                                          "totalElements": 2,
-                                          "totalPages": 1,
-                                          "last": true,
-                                          "first": true
-                                        }
-                                        """
-                            )
-                    )
-            )
+            @ApiResponse(responseCode = "200", description = "Paginated events retrieved successfully")
     })
     @GetMapping("/paged")
     public ResponseEntity<Page<EventDTO>> getAllEventsPaged(
@@ -253,79 +232,56 @@ public class EventController {
         return ResponseEntity.ok(page);
     }
 
+    // ----------------------------------------------------------------------
+    // FILTER BY DATE
+    // ----------------------------------------------------------------------
     @Operation(
             summary = "Get events by start date",
-            description = "Returns all events whose dateBegin matches the given date."
+            description = """
+                Filters events by the exact dateBegin value.
+                
+                URL format:
+                - /events/by-date?dateBegin=YYYY-MM-DD
+                
+                Examples:
+                - /events/by-date?dateBegin=2030-06-01
+                """
     )
     @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "List of events for the given start date",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(
-                                    value = """
-                                        [
-                                          {
-                                            "id": 5,
-                                            "name": "Indie Festival",
-                                            "dateBegin": "2030-06-01",
-                                            "description": "Local indie bands all day long",
-                                            "category": "CRAZY",
-                                            "venueId": 3
-                                          }
-                                        ]
-                                        """
-                            )
-                    )
-            )
+            @ApiResponse(responseCode = "200", description = "Events retrieved for the given date")
     })
     @GetMapping("/by-date")
     public ResponseEntity<List<EventDTO>> getEventsByDate(
-            @RequestParam
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate dateBegin
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateBegin
     ) {
         List<EventDTO> events = service.getEventsByDateBegin(dateBegin);
         return ResponseEntity.ok(events);
     }
 
+    // ----------------------------------------------------------------------
+    // FILTER BY CATEGORY + PAGINATION
+    // ----------------------------------------------------------------------
     @Operation(
             summary = "Get events by category with pagination",
-            description = "Returns a paginated list of events filtered by category. Valid values: NORMAL, CRAZY, BORING."
+            description = """
+                Filters events by category and returns a paginated result.
+
+                Valid categories:
+                - NORMAL
+                - CRAZY
+                - BORING
+                
+                URL format:
+                - /events/by-category?category={value}&page={page}&size={size}&sort={field},{direction}
+                
+                Examples:
+                - /events/by-category?category=CRAZY
+                - /events/by-category?category=NORMAL&page=1
+                - /events/by-category?category=BORING&sort=dateBegin,desc
+                """
     )
     @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Page of events for the given category",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(
-                                    value = """
-                                        {
-                                          "content": [
-                                            {
-                                              "id": 10,
-                                              "name": "Frontend Conference",
-                                              "dateBegin": "2030-09-10",
-                                              "description": "Talks and workshops about modern frontend",
-                                              "category": "BORING",
-                                              "venueId": 4
-                                            }
-                                          ],
-                                          "pageable": {
-                                            "pageNumber": 0,
-                                            "pageSize": 5
-                                          },
-                                          "totalElements": 1,
-                                          "totalPages": 1,
-                                          "last": true,
-                                          "first": true
-                                        }
-                                        """
-                            )
-                    )
-            )
+            @ApiResponse(responseCode = "200", description = "Paginated filtered events retrieved successfully")
     })
     @GetMapping("/by-category")
     public ResponseEntity<Page<EventDTO>> getEventsByCategory(

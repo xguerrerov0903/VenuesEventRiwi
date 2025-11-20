@@ -47,7 +47,7 @@ public class VenueController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "201",
-                    description = "Venue created",
+                    description = "Venue created successfully",
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(
@@ -69,11 +69,19 @@ public class VenueController {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Get all venues")
+    @Operation(
+            summary = "Get all venues",
+            description = """
+                Returns the complete list of venues.
+
+                Example URL:
+                - /venues
+                """
+    )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "List of venues",
+                    description = "List of venues retrieved successfully",
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(
@@ -100,11 +108,19 @@ public class VenueController {
         return ResponseEntity.ok(service.getAll());
     }
 
-    @Operation(summary = "Get a venue by ID")
+    @Operation(
+            summary = "Get a venue by ID",
+            description = """
+                Retrieves a venue using its unique ID.
+
+                Example URL:
+                - /venues/1
+                """
+    )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Venue found",
+                    description = "Venue found successfully",
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(
@@ -128,6 +144,12 @@ public class VenueController {
 
     @Operation(
             summary = "Update an existing venue",
+            description = """
+                Updates a venue by its unique ID.
+
+                Example URL:
+                - /venues/1
+                """,
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
                             mediaType = "application/json",
@@ -145,7 +167,7 @@ public class VenueController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Venue updated",
+                    description = "Venue updated successfully",
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(
@@ -167,9 +189,17 @@ public class VenueController {
         return ResponseEntity.ok(updated);
     }
 
-    @Operation(summary = "Delete a venue by ID")
+    @Operation(
+            summary = "Delete a venue by ID",
+            description = """
+                Deletes a venue by its unique ID.
+
+                Example URL:
+                - /venues/1
+                """
+    )
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Venue deleted"),
+            @ApiResponse(responseCode = "204", description = "Venue deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Venue not found", content = @Content)
     })
     @DeleteMapping("/{id}")
@@ -179,13 +209,28 @@ public class VenueController {
     }
 
     @Operation(
-            summary = "Get all venues with pagination",
-            description = "Returns a paginated list of venues. Default page size is 5, sorted by id."
+            summary = "Get paginated venues",
+            description = """
+                Returns a paginated list of venues.
+
+                Default pagination:
+                - page = 0
+                - size = 5
+                - sort = id,asc
+
+                URL format:
+                - /venues/paged?page={page}&size={size}&sort={field},{direction}
+
+                Examples:
+                - /venues/paged
+                - /venues/paged?page=0&size=5
+                - /venues/paged?page=1&size=10&sort=name,asc
+                """
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Page of venues",
+                    description = "Paginated venues retrieved successfully",
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(
@@ -227,12 +272,21 @@ public class VenueController {
 
     @Operation(
             summary = "Get venues by city",
-            description = "Returns all venues located in the given city (case-sensitive or case-insensitive depending on implementation)."
+            description = """
+                Filters venues by the specified city.
+
+                URL format:
+                - /venues/by-city?city={cityName}
+
+                Examples:
+                - /venues/by-city?city=Bogotá
+                - /venues/by-city?city=Medellín
+                """
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "List of venues in the given city",
+                    description = "Filtered venues retrieved successfully",
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(
