@@ -1,4 +1,4 @@
-package com.xguerrerov.venues.Config;
+/* package com.xguerrerov.venues.Config;
 
 import com.xguerrerov.venues.DTO.EventDTO;
 import com.xguerrerov.venues.DTO.VenueDTO;
@@ -83,3 +83,4 @@ public class DataInitializer {
         System.out.println("🟢 Datos iniciales (venues + events) cargados en memoria.");
     }
 }
+*/
