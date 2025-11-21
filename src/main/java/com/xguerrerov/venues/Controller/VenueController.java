@@ -1,4 +1,4 @@
-package com.xguerrerov.venues.Controller;
+/*package com.xguerrerov.venues.Controller;
 
 import com.xguerrerov.venues.DTO.VenueDTO;
 import com.xguerrerov.venues.Service.Interface.IVenueService;
@@ -314,3 +314,4 @@ public class VenueController {
         return ResponseEntity.ok(venues);
     }
 }
+*/

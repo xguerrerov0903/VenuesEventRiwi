@@ -1,4 +1,4 @@
-package com.xguerrerov.venues.Controller;
+/* package com.xguerrerov.venues.Controller;
 
 import com.xguerrerov.venues.DTO.EventDTO;
 import com.xguerrerov.venues.Service.Interface.IEventService;
@@ -292,3 +292,4 @@ public class EventController {
         return ResponseEntity.ok(page);
     }
 }
+*/
