@@ -7,14 +7,14 @@ public class Event {
     private Long id;
     private String name;
     private LocalDate dateBegin;
-    private String category;
+    private Category category;
     private String description;
     private Venue venue;
 
     public Event() {
     }
 
-    public Event(Long id, String name, LocalDate dateBegin, String category, String description, Venue venue) {
+    public Event(Long id, String name, LocalDate dateBegin, Category category, String description, Venue venue) {
         this.id = id;
         this.name = name;
         this.dateBegin = dateBegin;
@@ -49,11 +49,11 @@ public class Event {
         this.dateBegin = dateBegin;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 

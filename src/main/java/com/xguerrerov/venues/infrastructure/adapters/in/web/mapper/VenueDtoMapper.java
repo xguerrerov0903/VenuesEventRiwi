@@ -8,6 +8,8 @@ import org.mapstruct.*;
 public interface VenueDtoMapper {
 
     // DTO → Domain
+    @Mapping(target = "events", ignore = true)
+
     Venue toDomain(VenueDto dto);
 
     // Domain → DTO
