@@ -14,29 +14,11 @@ public class BeanConfig {
     // ====== EVENT ======
 
     @Bean
-    public EventService eventService(EventRepositoryPort eventRepositoryPort) {
-        return new EventService(eventRepositoryPort);
+    public EventService eventService(EventRepositoryPort eventRepositoryPort,
+                                     VenueRepositoryPort venueRepositoryPort) {
+        return new EventService(eventRepositoryPort, venueRepositoryPort);
     }
 
-    @Bean
-    public CreateEventUseCase createEventUseCase(EventService service) {
-        return service;
-    }
-
-    @Bean
-    public UpdateEventUseCase updateEventUseCase(EventService service) {
-        return service;
-    }
-
-    @Bean
-    public DeleteEventUseCase deleteEventUseCase(EventService service) {
-        return service;
-    }
-
-    @Bean
-    public GetEventUseCase getEventUseCase(EventService service) {
-        return service;
-    }
 
     // ====== VENUE ======
 
@@ -44,24 +26,5 @@ public class BeanConfig {
     public VenueService venueService(VenueRepositoryPort venueRepositoryPort) {
         return new VenueService(venueRepositoryPort);
     }
-
-    @Bean
-    public CreateVenueUseCase createVenueUseCase(VenueService service) {
-        return service;
-    }
-
-    @Bean
-    public UpdateVenueUseCase updateVenueUseCase(VenueService service) {
-        return service;
-    }
-
-    @Bean
-    public DeleteVenueUseCase deleteVenueUseCase(VenueService service) {
-        return service;
-    }
-
-    @Bean
-    public GetVenueUseCase getVenueUseCase(VenueService service) {
-        return service;
-    }
 }
+

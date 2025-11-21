@@ -1,5 +1,6 @@
 package com.xguerrerov.venues.infrastructure.adapters.out.jpa.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -26,5 +27,6 @@ public class VenueEntity {
 
     @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @JsonManagedReference
     private List<EventEntity> events;
 }

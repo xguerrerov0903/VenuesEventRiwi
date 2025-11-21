@@ -1,16 +1,16 @@
 package com.xguerrerov.venues.aplication.usecase;
 
 import com.xguerrerov.venues.domain.model.Event;
-import com.xguerrerov.venues.domain.ports.in.CreateEventUseCase;
-import com.xguerrerov.venues.domain.ports.in.DeleteEventUseCase;
-import com.xguerrerov.venues.domain.ports.in.GetEventUseCase;
-import com.xguerrerov.venues.domain.ports.in.UpdateEventUseCase;
+import com.xguerrerov.venues.domain.model.Venue;
+import com.xguerrerov.venues.domain.ports.in.*;
 import com.xguerrerov.venues.domain.ports.out.EventRepositoryPort;
+import com.xguerrerov.venues.domain.ports.out.VenueRepositoryPort;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
+@Service
 public class EventService implements
         CreateEventUseCase,
         UpdateEventUseCase,
@@ -18,42 +18,63 @@ public class EventService implements
         GetEventUseCase {
 
     private final EventRepositoryPort eventRepositoryPort;
+    private final VenueRepositoryPort venueRepositoryPort;
 
-    public EventService(EventRepositoryPort eventRepositoryPort) {
+    public EventService(EventRepositoryPort eventRepositoryPort,
+                        VenueRepositoryPort venueRepositoryPort) {
         this.eventRepositoryPort = eventRepositoryPort;
+        this.venueRepositoryPort = venueRepositoryPort;
     }
 
+    // ================= CREATE =================
     @Override
-    public Event create(Event event) {
-        // aquí podrías validar duplicados, fecha, etc.
+    public Event create(Event event, Long venueId) {
+
+        Venue venue = venueRepositoryPort.findById(venueId)
+                .orElseThrow(() -> new RuntimeException("Venue not found"));
+
+        event.setVenue(venue);
+
         return eventRepositoryPort.save(event);
     }
 
+    // ================= UPDATE =================
     @Override
-    public Event update(Long id, Event event) {
-        // si quieres validar existencia:
-        Optional<Event> existing = eventRepositoryPort.findById(id);
-        if (existing.isEmpty()) {
-            throw new RuntimeException("Event with id " + id + " not found");
-        }
+    public Event update(Long id, Event event, Long venueId) {
+
+        Event existing = eventRepositoryPort.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        Venue venue = venueRepositoryPort.findById(venueId)
+                .orElseThrow(() -> new RuntimeException("Venue not found"));
+
         event.setId(id);
+        event.setVenue(venue);
+
         return eventRepositoryPort.save(event);
     }
 
+    // ================= DELETE =================
     @Override
     public void delete(Long id) {
         eventRepositoryPort.deleteById(id);
     }
 
+    // ================= GET =================
     @Override
     public Event findById(Long id) {
         return eventRepositoryPort.findById(id)
-                .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
+                .orElseThrow(() -> new RuntimeException("Event not found"));
     }
 
     @Override
     public List<Event> findAll() {
         return eventRepositoryPort.findAll();
+    }
+
+    @Override
+    public List<Event> findByVenue(Long venueId) {
+        return eventRepositoryPort.findByVenueId(venueId);
     }
 
     @Override
@@ -63,11 +84,6 @@ public class EventService implements
 
     @Override
     public List<Event> findByDateBegin(LocalDate dateBegin) {
-        return List.of();
-    }
-
-    @Override
-    public List<Event> findByVenue(Long venueId) {
-        return eventRepositoryPort.findByVenueId(venueId);
+        return eventRepositoryPort.findByDateBegin(dateBegin);
     }
 }

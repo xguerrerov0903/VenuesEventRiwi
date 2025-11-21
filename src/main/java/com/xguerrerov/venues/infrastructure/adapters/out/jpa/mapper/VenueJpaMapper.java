@@ -10,6 +10,6 @@ public interface VenueJpaMapper {
 
     @Mapping(target = "events", ignore = true)
     VenueEntity toEntity(Venue domain);
-
+    @Mapping(target = "events", ignore = true)
     Venue toDomain(VenueEntity entity);
 }

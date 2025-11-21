@@ -1,5 +1,7 @@
 package com.xguerrerov.venues.infrastructure.adapters.out.jpa.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.xguerrerov.venues.domain.model.Category;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,6 +36,7 @@ public class EventEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "venue_id", nullable = false)
     @ToString.Exclude
+    @JsonBackReference
     private VenueEntity venue;  // ✔ el VenueEntity correcto
 
     @PrePersist
