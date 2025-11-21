@@ -11,41 +11,42 @@ import java.util.List;
 
 public class VenueService implements
         CreateVenueUseCase,
+        UpdateVenueUseCase,
         DeleteVenueUseCase,
-        GetVenueUseCase,
-        UpdateVenueUseCase {
+        GetVenueUseCase {
 
     private final VenueRepositoryPort venueRepositoryPort;
 
     public VenueService(VenueRepositoryPort venueRepositoryPort) {
         this.venueRepositoryPort = venueRepositoryPort;
     }
+
     @Override
     public Venue create(Venue venue) {
         return venueRepositoryPort.save(venue);
     }
 
     @Override
-    public List<Venue> findAll() {
-        return venueRepositoryPort.findAll();
-    }
-
-
-    @Override
-    public Venue findById(Long id) {
-        return venueRepositoryPort.findById(id)
-                .orElseThrow(() -> new RuntimeException("Venue not found"));
-    }
-
-    @Override
     public Venue update(Long id, Venue venue) {
+        // podrías validar que exista primero
         venue.setId(id);
-        return venueRepositoryPort.update(venue);
+        return venueRepositoryPort.save(venue);
     }
 
     @Override
     public void delete(Long id) {
         venueRepositoryPort.deleteById(id);
+    }
+
+    @Override
+    public Venue findById(Long id) {
+        return venueRepositoryPort.findById(id)
+                .orElseThrow(() -> new RuntimeException("Venue with id " + id + " not found"));
+    }
+
+    @Override
+    public List<Venue> findAll() {
+        return venueRepositoryPort.findAll();
     }
 
     @Override

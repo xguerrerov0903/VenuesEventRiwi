@@ -1,10 +1,7 @@
 package com.xguerrerov.venues.infrastructure.adapters.out.jpa.entity;
 
-import com.xguerrerov.venues.Entity.EventEntity;
-import com.xguerrerov.venues.Model.Venue;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.List;
 
 @Getter
@@ -14,7 +11,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "venues")
-public class VenueEntity implements Venue {
+public class VenueEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,16 +24,7 @@ public class VenueEntity implements Venue {
     @Column(nullable = false)
     private String city;
 
-
-    @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<EventEntity> events;
-
-    @PrePersist
-    @PreUpdate
-    public void normalizeData() {
-        if (this.name != null) this.name = this.name.toUpperCase();
-        if (this.city != null) this.city = this.city.toUpperCase();
-    }
-
 }

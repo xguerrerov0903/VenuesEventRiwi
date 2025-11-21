@@ -9,12 +9,13 @@ import com.xguerrerov.venues.domain.ports.out.EventRepositoryPort;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class EventService implements
         CreateEventUseCase,
+        UpdateEventUseCase,
         DeleteEventUseCase,
-        GetEventUseCase,
-        UpdateEventUseCase {
+        GetEventUseCase {
 
     private final EventRepositoryPort eventRepositoryPort;
 
@@ -24,29 +25,35 @@ public class EventService implements
 
     @Override
     public Event create(Event event) {
+        // aquí podrías validar duplicados, fecha, etc.
         return eventRepositoryPort.save(event);
     }
 
     @Override
-    public List<Event> findAll() {
-        return eventRepositoryPort.findAll();
-    }
-
-    @Override
-    public Event findById(Long id) {
-        return eventRepositoryPort.findById(id)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
-    }
-
-    @Override
     public Event update(Long id, Event event) {
+        // si quieres validar existencia:
+        Optional<Event> existing = eventRepositoryPort.findById(id);
+        if (existing.isEmpty()) {
+            throw new RuntimeException("Event with id " + id + " not found");
+        }
         event.setId(id);
-        return eventRepositoryPort.update(event);
+        return eventRepositoryPort.save(event);
     }
 
     @Override
     public void delete(Long id) {
         eventRepositoryPort.deleteById(id);
+    }
+
+    @Override
+    public Event findById(Long id) {
+        return eventRepositoryPort.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
+    }
+
+    @Override
+    public List<Event> findAll() {
+        return eventRepositoryPort.findAll();
     }
 
     @Override
@@ -56,12 +63,11 @@ public class EventService implements
 
     @Override
     public List<Event> findByDateBegin(LocalDate dateBegin) {
-        return eventRepositoryPort.findByDateBegin(dateBegin);
+        return List.of();
     }
 
     @Override
     public List<Event> findByVenue(Long venueId) {
         return eventRepositoryPort.findByVenueId(venueId);
     }
-
 }

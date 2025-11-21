@@ -1,13 +1,9 @@
 package com.xguerrerov.venues.infrastructure.adapters.out.jpa.entity;
 
-import com.xguerrerov.venues.Entity.VenueEntity;
-import com.xguerrerov.venues.Model.Event;
-import java.time.LocalDate;
-
 import com.xguerrerov.venues.domain.model.Category;
 import jakarta.persistence.*;
 import lombok.*;
-
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,7 +12,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "events")
-public class EventEntity implements Event {
+public class EventEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,12 +34,11 @@ public class EventEntity implements Event {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "venue_id", nullable = false)
     @ToString.Exclude
-    private VenueEntity venue;
+    private VenueEntity venue;  // ✔ el VenueEntity correcto
 
     @PrePersist
     @PreUpdate
     public void normalizeData() {
         if (this.name != null) this.name = this.name.toUpperCase();
     }
-
 }

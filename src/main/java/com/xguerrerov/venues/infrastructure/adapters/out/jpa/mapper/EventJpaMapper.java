@@ -10,7 +10,6 @@ import org.mapstruct.Mapping;
 public interface EventJpaMapper {
     @Mapping(target = "venue", ignore = false)
     EventEntity toEntity(Event domain);
-
     Event toDomain(EventEntity entity);
 }
 

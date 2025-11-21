@@ -23,4 +23,6 @@ public interface EventRepositoryPort {
 
     List<Event> findByVenueId(Long venueId);
 
+    Optional<Event> findByName(String name);
+
 }

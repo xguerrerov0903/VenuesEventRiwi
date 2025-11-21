@@ -1,14 +1,15 @@
 package com.xguerrerov.venues.infrastructure.adapters.out.jpa.mapper;
 
-import com.xguerrerov.venues.domain.model.Event;
-import com.xguerrerov.venues.infrastructure.adapters.out.jpa.entity.EventEntity;
+import com.xguerrerov.venues.domain.model.Venue;
+import com.xguerrerov.venues.infrastructure.adapters.out.jpa.entity.VenueEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+@Mapper(componentModel = "spring")
 public interface VenueJpaMapper {
+
     @Mapping(target = "events", ignore = true)
-    EventEntity toEntity(Event domain);
+    VenueEntity toEntity(Venue domain);
 
-    Event toDomain(EventEntity entity);
+    Venue toDomain(VenueEntity entity);
 }
-

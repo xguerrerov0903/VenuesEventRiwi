@@ -1,15 +1,23 @@
-package com.xguerrerov.venues.DTO;
+package com.xguerrerov.venues.infrastructure.adapters.in.web.dto;
 
-import com.xguerrerov.venues.Entity.Category;
-import com.xguerrerov.venues.Model.Venue;
 import com.xguerrerov.venues.Utils.ValueOfEnum;
-import jakarta.validation.constraints.*;
-import lombok.*;
+import com.xguerrerov.venues.domain.model.Category;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class EventDTO {
+public class EventDto {
     private Long id;
 
     @NotBlank(message = "Event name cannot be empty")
@@ -23,7 +31,7 @@ public class EventDTO {
     private String description;
 
     @NotBlank(message = "Event category cannot be empty")
-    @ValueOfEnum(enumClass = Category.class, message = "La categoría debe ser: NORMAL, CRAZY o BORING")
+    @ValueOfEnum(enumClass = Category.class, message = "The category should be: NORMAL, CRAZY o BORING")
     private String category;
 
     @NotNull(message = "Venue ID is required for the event")

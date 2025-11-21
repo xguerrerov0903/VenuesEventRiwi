@@ -1,11 +1,17 @@
-package com.xguerrerov.venues.DTO;
+package com.xguerrerov.venues.infrastructure.adapters.in.web.dto;
 
-import jakarta.validation.constraints.*;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class VenueDTO {
+public class VenueDto {
 
     private Long id;
 
@@ -16,5 +22,4 @@ public class VenueDTO {
     @NotBlank(message = "Venue city cannot be empty")
     @Size(min = 3, max = 100, message = "The venue city need at least 3 characters and a maximum of 100 characters")
     private String city;
-
 }
