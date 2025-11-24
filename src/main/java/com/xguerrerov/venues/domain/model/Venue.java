@@ -1,5 +1,7 @@
 package com.xguerrerov.venues.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 public class Venue {
@@ -7,6 +9,7 @@ public class Venue {
     private Long id;
     private String name;
     private String city;
+    @JsonIgnore
     private List<Event> events;
 
     public Venue() {
