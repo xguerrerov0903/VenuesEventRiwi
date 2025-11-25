@@ -7,6 +7,7 @@ import com.xguerrerov.venues.domain.ports.out.EventRepositoryPort;
 import com.xguerrerov.venues.domain.ports.out.VenueRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,8 +25,11 @@ public class EventService implements
     private final VenueRepositoryPort venueRepositoryPort;
 
 
-    // ================= CREATE =================
+    // ============================================================
+    // CREATE EVENT
+    // ============================================================
     @Override
+    @Transactional
     public Event create(Event event, Long venueId) {
 
         Venue venue = venueRepositoryPort.findById(venueId)
@@ -33,11 +37,22 @@ public class EventService implements
 
         event.setVenue(venue);
 
+        // dateEnd: 7 días después
+        event.setDateEnd(event.getDateBegin().plusDays(7));
+
+        // estado inicial
+        event.setState(event.getDateBegin().isAfter(LocalDate.now())
+                ? com.xguerrerov.venues.domain.model.State.ACTIVE
+                : com.xguerrerov.venues.domain.model.State.INACTIVE);
+
         return eventRepositoryPort.save(event);
     }
 
-    // ================= UPDATE =================
+    // ============================================================
+    // UPDATE EVENT
+    // ============================================================
     @Override
+    @Transactional
     public Event update(Long id, Event event, Long venueId) {
 
         Event existing = eventRepositoryPort.findById(id)
@@ -49,16 +64,26 @@ public class EventService implements
         event.setId(id);
         event.setVenue(venue);
 
+        // recalcular fecha fin si se cambia la fecha inicio
+        if (event.getDateBegin() != null) {
+            event.setDateEnd(event.getDateBegin().plusDays(7));
+        }
+
         return eventRepositoryPort.save(event);
     }
 
-    // ================= DELETE =================
+    // ============================================================
+    // DELETE EVENT
+    // ============================================================
     @Override
+    @Transactional
     public void delete(Long id) {
         eventRepositoryPort.deleteById(id);
     }
 
-    // ================= GET =================
+    // ============================================================
+    // GETTERS
+    // ============================================================
     @Override
     public Event findById(Long id) {
         return eventRepositoryPort.findById(id)
@@ -95,10 +120,8 @@ public class EventService implements
         return eventRepositoryPort.getByState(state);
     }
 
-
     @Override
     public Optional<Event> findByName(String name) {
         return eventRepositoryPort.findByName(name);
     }
-
 }

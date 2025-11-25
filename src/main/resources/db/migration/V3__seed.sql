@@ -1,6 +1,6 @@
--- ============================================
--- VENUES (28 registros)
--- ============================================
+-- =======================================================================================
+-- SEED: VENUES (28 registros)
+-- =======================================================================================
 
 INSERT INTO venues (name, city) VALUES ('GRAND ARENA', 'NEW YORK');
 INSERT INTO venues (name, city) VALUES ('SUNSET HALL', 'LOS ANGELES');
@@ -32,11 +32,11 @@ INSERT INTO venues (name, city) VALUES ('INFINITE SQUARE', 'COLUMBUS');
 INSERT INTO venues (name, city) VALUES ('STARLIGHT PAVILION', 'CHARLOTTE');
 
 
--- ============================================
--- EVENTS (76 registros)
--- date_end = date_begin + 7 días
+-- =======================================================================================
+-- SEED: EVENTS (76 registros)
+-- date_end = date_begin + interval 7 días
 -- state = 'ACTIVE'
--- ============================================
+-- =======================================================================================
 
 INSERT INTO events (name, date_begin, date_end, description, category, state, venue_id) VALUES
 ('SEED EVENT 01','2026-01-10','2026-01-17','PRELOADED EVENT 01','NORMAL','ACTIVE',1),
