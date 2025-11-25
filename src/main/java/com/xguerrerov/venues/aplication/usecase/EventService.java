@@ -5,12 +5,15 @@ import com.xguerrerov.venues.domain.model.Venue;
 import com.xguerrerov.venues.domain.ports.in.*;
 import com.xguerrerov.venues.domain.ports.out.EventRepositoryPort;
 import com.xguerrerov.venues.domain.ports.out.VenueRepositoryPort;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class EventService implements
         CreateEventUseCase,
         UpdateEventUseCase,
@@ -20,11 +23,7 @@ public class EventService implements
     private final EventRepositoryPort eventRepositoryPort;
     private final VenueRepositoryPort venueRepositoryPort;
 
-    public EventService(EventRepositoryPort eventRepositoryPort,
-                        VenueRepositoryPort venueRepositoryPort) {
-        this.eventRepositoryPort = eventRepositoryPort;
-        this.venueRepositoryPort = venueRepositoryPort;
-    }
+
 
     // ================= CREATE =================
     @Override
@@ -73,17 +72,33 @@ public class EventService implements
     }
 
     @Override
-    public List<Event> findByVenue(Long venueId) {
-        return eventRepositoryPort.findByVenueId(venueId);
+    public Optional<Event> findByName(String name) {
+        return Optional.empty();
     }
 
     @Override
-    public List<Event> findByCategory(String category, int page, int size) {
-        return eventRepositoryPort.findByCategory(category, page, size);
+    public List<Event> getByCategory(String category, int page, int size) {
+        return List.of();
     }
 
     @Override
-    public List<Event> findByDateBegin(LocalDate dateBegin) {
-        return eventRepositoryPort.findByDateBegin(dateBegin);
+    public List<Event> getByDateBegin(LocalDate dateBegin) {
+        return List.of();
     }
+
+    @Override
+    public List<Event> getByDateEnd(LocalDate dateEnd) {
+        return List.of();
+    }
+
+    @Override
+    public List<Event> getByState(String State) {
+        return List.of();
+    }
+
+    @Override
+    public List<Event> getByVenue(Long venueId) {
+        return List.of();
+    }
+
 }

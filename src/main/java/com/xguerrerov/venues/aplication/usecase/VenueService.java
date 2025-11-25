@@ -6,9 +6,14 @@ import com.xguerrerov.venues.domain.ports.in.DeleteVenueUseCase;
 import com.xguerrerov.venues.domain.ports.in.GetVenueUseCase;
 import com.xguerrerov.venues.domain.ports.in.UpdateVenueUseCase;
 import com.xguerrerov.venues.domain.ports.out.VenueRepositoryPort;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
+@Service
+@RequiredArgsConstructor
 public class VenueService implements
         CreateVenueUseCase,
         UpdateVenueUseCase,
@@ -17,10 +22,6 @@ public class VenueService implements
 
     private final VenueRepositoryPort venueRepositoryPort;
 
-    public VenueService(VenueRepositoryPort venueRepositoryPort) {
-        this.venueRepositoryPort = venueRepositoryPort;
-    }
-
     @Override
     public Venue create(Venue venue) {
         return venueRepositoryPort.save(venue);
@@ -28,7 +29,6 @@ public class VenueService implements
 
     @Override
     public Venue update(Long id, Venue venue) {
-        // podrías validar que exista primero
         venue.setId(id);
         return venueRepositoryPort.save(venue);
     }
@@ -50,7 +50,12 @@ public class VenueService implements
     }
 
     @Override
-    public List<Venue> findByCity(String city) {
-        return venueRepositoryPort.findByCity(city);
+    public List<Venue> getByCity(String city) {
+        return List.of();
+    }
+
+    @Override
+    public Optional<Venue> findByName(String name) {
+        return Optional.empty();
     }
 }

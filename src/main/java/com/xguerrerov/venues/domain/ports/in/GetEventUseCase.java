@@ -4,6 +4,7 @@ import com.xguerrerov.venues.domain.model.Event;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface GetEventUseCase {
 
@@ -11,9 +12,15 @@ public interface GetEventUseCase {
 
     List<Event> findAll();
 
-    List<Event> findByCategory(String category, int page, int size);
+    Optional<Event> findByName (String name);
 
-    List<Event> findByDateBegin(LocalDate dateBegin);
+    List<Event> getByCategory(String category, int page, int size);
 
-    List<Event> findByVenue(Long venueId);
+    List<Event> getByDateBegin(LocalDate dateBegin);
+
+    List<Event> getByDateEnd(LocalDate dateEnd);
+
+    List<Event> getByState(String State);
+
+    List<Event> getByVenue(Long venueId);
 }

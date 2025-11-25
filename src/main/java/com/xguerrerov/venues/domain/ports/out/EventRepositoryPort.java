@@ -17,11 +17,15 @@ public interface EventRepositoryPort {
 
     void deleteById(Long id);
 
-    List<Event> findByCategory(String category, int page, int size);
+    List<Event> getByCategory(String category, int page, int size);
 
-    List<Event> findByDateBegin(LocalDate dateBegin);
+    List<Event> getByDateBegin(LocalDate dateBegin);
 
-    List<Event> findByVenueId(Long venueId);
+    List<Event> getByDateEnd(LocalDate dateEnd);
+
+    List<Event> getByVenueId(Long venueId);
+
+    List<Event> getByState(String state)
 
     Optional<Event> findByName(String name);
 

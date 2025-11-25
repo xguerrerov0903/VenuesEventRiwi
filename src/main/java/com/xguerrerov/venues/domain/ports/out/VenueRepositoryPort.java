@@ -17,6 +17,8 @@ public interface VenueRepositoryPort {
 
     void deleteById(Long id);
 
-    List<Venue> findByCity(String city);
+    List<Venue> getByCity(String city);
+
+    Optional<Venue> findByName (String name);
 
 }

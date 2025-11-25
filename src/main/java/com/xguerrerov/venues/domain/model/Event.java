@@ -7,19 +7,24 @@ public class Event {
     private Long id;
     private String name;
     private LocalDate dateBegin;
+    private LocalDate dateEnd;
     private Category category;
     private String description;
+    private State state;
     private Venue venue;
+
 
     public Event() {
     }
 
-    public Event(Long id, String name, LocalDate dateBegin, Category category, String description, Venue venue) {
+    public Event(Long id, String name, LocalDate dateBegin, LocalDate dateEnd, Category category, String description, State state, Venue venue) {
         this.id = id;
         this.name = name;
         this.dateBegin = dateBegin;
+        this.dateEnd = dateEnd;
         this.category = category;
         this.description = description;
+        this.state = state;
         this.venue = venue;
     }
 
@@ -71,5 +76,21 @@ public class Event {
 
     public void setVenue(Venue venue) {
         this.venue = venue;
+    }
+
+    public LocalDate getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEnd(LocalDate dateEnd) {
+        this.dateEnd = dateEnd;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 }

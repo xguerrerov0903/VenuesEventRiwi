@@ -1,7 +1,6 @@
 package com.xguerrerov.venues.infrastructure.adapters.out.jpa.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.xguerrerov.venues.domain.model.Category;
 import jakarta.persistence.*;
 import lombok.*;
