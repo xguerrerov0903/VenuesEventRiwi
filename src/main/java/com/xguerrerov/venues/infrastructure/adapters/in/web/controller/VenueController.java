@@ -253,8 +253,8 @@ public class VenueController {
             )
     })
     @GetMapping("/city/{city}")
-    public ResponseEntity<List<VenueDto>> findByCity(@PathVariable String city) {
-        List<VenueDto> response = getUseCase.findByCity(city)
+    public ResponseEntity<List<VenueDto>> getdByCity(@PathVariable String city) {
+        List<VenueDto> response = getUseCase.getByCity(city)
                 .stream()
                 .map(mapper::toDto)
                 .toList();

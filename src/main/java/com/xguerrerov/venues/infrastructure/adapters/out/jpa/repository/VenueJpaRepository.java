@@ -12,6 +12,7 @@ import java.util.Optional;
 @Repository
 public interface VenueJpaRepository extends JpaRepository <VenueEntity, Long> {
     Optional<VenueEntity> findByName(String name);
+
     @Query("SELECT v FROM VenueEntity v WHERE UPPER(v.city) = UPPER(:city)")
     List<VenueEntity> getByCity(@Param("city") String city);
 

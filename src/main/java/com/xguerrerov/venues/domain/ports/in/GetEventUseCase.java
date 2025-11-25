@@ -22,5 +22,5 @@ public interface GetEventUseCase {
 
     List<Event> getByState(String State);
 
-    List<Event> getByVenue(Long venueId);
+    List<Event> getByVenueId(Long venueId);
 }

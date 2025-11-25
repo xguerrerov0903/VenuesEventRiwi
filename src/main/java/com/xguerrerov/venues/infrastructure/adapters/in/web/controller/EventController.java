@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -205,4 +206,133 @@ public class EventController {
         deleteUseCase.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<EventDto>> getByCategory(
+            @PathVariable String category,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        List<EventDto> response = getUseCase.getByCategory(category, page, size)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
+
+        return ResponseEntity.ok(response);
+    }
+
+    // ----------------------------------------------------------------------
+    // GET BY DATE BEGIN
+    // ----------------------------------------------------------------------
+    @Operation(
+            summary = "Get events by start date",
+            description = """
+                Retrieves all events that begin on a specific date.
+                
+                Example URL:
+                - /events/date-begin?date=2030-03-15
+                """
+    )
+    @GetMapping("/date-begin")
+    public ResponseEntity<List<EventDto>> getByDateBegin(@RequestParam("date") String date) {
+
+        List<EventDto> response = getUseCase.getByDateBegin(LocalDate.parse(date))
+                .stream()
+                .map(mapper::toDto)
+                .toList();
+
+        return ResponseEntity.ok(response);
+    }
+
+    // ----------------------------------------------------------------------
+    // GET BY DATE END
+    // ----------------------------------------------------------------------
+    @Operation(
+            summary = "Get events by end date",
+            description = """
+                Retrieves all events that end on a specific date.
+                
+                Example URL:
+                - /events/date-end?date=2030-03-20
+                """
+    )
+    @GetMapping("/date-end")
+    public ResponseEntity<List<EventDto>> getByDateEnd(@RequestParam("date") String date) {
+
+        List<EventDto> response = getUseCase.getByDateEnd(LocalDate.parse(date))
+                .stream()
+                .map(mapper::toDto)
+                .toList();
+
+        return ResponseEntity.ok(response);
+    }
+
+    // ----------------------------------------------------------------------
+    // GET BY VENUE ID
+    // ----------------------------------------------------------------------
+    @Operation(
+            summary = "Get events by venue ID",
+            description = """
+                Retrieves all events assigned to a specific venue.
+                
+                Example URL:
+                - /events/venue/2
+                """
+    )
+    @GetMapping("/venue/{venueId}")
+    public ResponseEntity<List<EventDto>> getByVenueId(@PathVariable Long venueId) {
+
+        List<EventDto> response = getUseCase.getByVenueId(venueId)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
+
+        return ResponseEntity.ok(response);
+    }
+
+    // ----------------------------------------------------------------------
+    // GET BY STATE
+    // ----------------------------------------------------------------------
+    @Operation(
+            summary = "Get events by state",
+            description = """
+                Retrieves events filtered by their state (ACTIVE, CANCELLED, POSTPONED, etc.).
+                
+                Example URL:
+                - /events/state/ACTIVE
+                """
+    )
+    @GetMapping("/state/{state}")
+    public ResponseEntity<List<EventDto>> getByState(@PathVariable String state) {
+
+        List<EventDto> response = getUseCase.getByState(state)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
+
+        return ResponseEntity.ok(response);
+    }
+
+    // ----------------------------------------------------------------------
+    // FIND BY NAME
+    // ----------------------------------------------------------------------
+    @Operation(
+            summary = "Find an event by name",
+            description = """
+                Retrieves a single event by its name.
+                
+                Example URL:
+                - /events/by-name?name=Rock Concert
+                """
+    )
+    @GetMapping("/by-name")
+    public ResponseEntity<EventDto> findByName(@RequestParam String name) {
+
+        Event event = getUseCase.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        return ResponseEntity.ok(mapper.toDto(event));
+    }
+
+
 }

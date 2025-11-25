@@ -1,24 +1,21 @@
 package com.xguerrerov.venues.infrastructure.adapters.out.jpa.adapter;
 
-
 import com.xguerrerov.venues.domain.model.Category;
 import com.xguerrerov.venues.domain.model.Event;
 import com.xguerrerov.venues.domain.model.State;
-import com.xguerrerov.venues.infrastructure.adapters.out.jpa.entity.EventEntity;
 import com.xguerrerov.venues.domain.ports.out.EventRepositoryPort;
+import com.xguerrerov.venues.infrastructure.adapters.out.jpa.entity.EventEntity;
+import com.xguerrerov.venues.infrastructure.adapters.out.jpa.mapper.EventJpaMapper;
+import com.xguerrerov.venues.infrastructure.adapters.out.jpa.repository.EventJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
-import com.xguerrerov.venues.infrastructure.adapters.out.jpa.mapper.EventJpaMapper;
-import com.xguerrerov.venues.infrastructure.adapters.out.jpa.repository.EventJpaRepository;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
 
 @Component
 @RequiredArgsConstructor
@@ -26,7 +23,6 @@ public class EventJpaAdapter implements EventRepositoryPort {
 
     private final EventJpaMapper mapper;
     private final EventJpaRepository eventJpaRepository;
-
 
     @Override
     public Event save(Event event) {
@@ -41,7 +37,9 @@ public class EventJpaAdapter implements EventRepositoryPort {
 
     @Override
     public Optional<Event> findByName(String name) {
-        return eventJpaRepository.findByName(name).map(mapper::toDomain);
+        // si quieres normalizar:
+        String normalized = name.toUpperCase();
+        return eventJpaRepository.findByName(normalized).map(mapper::toDomain);
     }
 
     @Override
@@ -66,14 +64,14 @@ public class EventJpaAdapter implements EventRepositoryPort {
 
     @Override
     public List<Event> getByCategory(String category, int page, int size) {
-
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<EventEntity> pageResult =
-                eventJpaRepository.getByCategory(Category.valueOf(category.toUpperCase()), pageable);
+        Category categoryEnum = Category.valueOf(category.toUpperCase());
 
-        return pageResult
-                .getContent()
+        Page<EventEntity> pageResult =
+                eventJpaRepository.getByCategory(categoryEnum, pageable);
+
+        return pageResult.getContent()
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
@@ -105,13 +103,10 @@ public class EventJpaAdapter implements EventRepositoryPort {
 
     @Override
     public List<Event> getByState(String state) {
-
         State stateEnum = State.valueOf(state.toUpperCase());
-
         return eventJpaRepository.getByState(stateEnum)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
     }
-
 }

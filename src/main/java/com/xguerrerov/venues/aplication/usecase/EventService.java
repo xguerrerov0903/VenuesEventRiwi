@@ -24,7 +24,6 @@ public class EventService implements
     private final VenueRepositoryPort venueRepositoryPort;
 
 
-
     // ================= CREATE =================
     @Override
     public Event create(Event event, Long venueId) {
@@ -72,33 +71,34 @@ public class EventService implements
     }
 
     @Override
-    public Optional<Event> findByName(String name) {
-        return Optional.empty();
-    }
-
-    @Override
     public List<Event> getByCategory(String category, int page, int size) {
-        return List.of();
+        return eventRepositoryPort.getByCategory(category, page, size);
     }
 
     @Override
     public List<Event> getByDateBegin(LocalDate dateBegin) {
-        return List.of();
+        return eventRepositoryPort.getByDateBegin(dateBegin);
     }
 
     @Override
     public List<Event> getByDateEnd(LocalDate dateEnd) {
-        return List.of();
+        return eventRepositoryPort.getByDateEnd(dateEnd);
     }
 
     @Override
-    public List<Event> getByState(String State) {
-        return List.of();
+    public List<Event> getByVenueId(Long venueId) {
+        return eventRepositoryPort.getByVenueId(venueId);
     }
 
     @Override
-    public List<Event> getByVenue(Long venueId) {
-        return List.of();
+    public List<Event> getByState(String state) {
+        return eventRepositoryPort.getByState(state);
+    }
+
+
+    @Override
+    public Optional<Event> findByName(String name) {
+        return eventRepositoryPort.findByName(name);
     }
 
 }

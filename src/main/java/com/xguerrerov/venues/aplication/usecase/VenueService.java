@@ -51,11 +51,11 @@ public class VenueService implements
 
     @Override
     public List<Venue> getByCity(String city) {
-        return List.of();
+        return venueRepositoryPort.getByCity(city);
     }
 
     @Override
     public Optional<Venue> findByName(String name) {
-        return Optional.empty();
+        return venueRepositoryPort.findByName(name);
     }
 }

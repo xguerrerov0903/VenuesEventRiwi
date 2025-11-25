@@ -17,34 +17,18 @@ public interface EventJpaRepository extends JpaRepository<EventEntity, Long> {
 
     Optional<EventEntity> findByName(String name);
 
-
     @Query("SELECT e FROM EventEntity e WHERE e.category = :category")
-    Page<EventEntity> getByCategory(
-            @Param("category") Category category,
-            Pageable pageable
-    );
-
+    Page<EventEntity> getByCategory(@Param("category") Category category, Pageable pageable);
 
     @Query("SELECT e FROM EventEntity e WHERE e.dateBegin = :dateBegin")
-    List<EventEntity> getByDateBegin(
-            @Param("dateBegin") LocalDate dateBegin
-    );
-
+    List<EventEntity> getByDateBegin(@Param("dateBegin") LocalDate dateBegin);
 
     @Query("SELECT e FROM EventEntity e WHERE e.dateEnd = :dateEnd")
-    List<EventEntity> getByDateEnd(
-            @Param("dateEnd") LocalDate dateEnd
-    );
-
+    List<EventEntity> getByDateEnd(@Param("dateEnd") LocalDate dateEnd);
 
     @Query("SELECT e FROM EventEntity e WHERE e.venue.id = :venueId")
-    List<EventEntity> getByVenueId(
-            @Param("venueId") Long venueId
-    );
-
+    List<EventEntity> getByVenueId(@Param("venueId") Long venueId);
 
     @Query("SELECT e FROM EventEntity e WHERE e.state = :state")
-    List<EventEntity> getByState(
-            @Param("state") State state
-    );
+    List<EventEntity> getByState(@Param("state") State state);
 }
