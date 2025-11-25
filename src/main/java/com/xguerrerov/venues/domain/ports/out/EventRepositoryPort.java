@@ -25,7 +25,7 @@ public interface EventRepositoryPort {
 
     List<Event> getByVenueId(Long venueId);
 
-    List<Event> getByState(String state)
+    List<Event> getByState(String state);
 
     Optional<Event> findByName(String name);
 

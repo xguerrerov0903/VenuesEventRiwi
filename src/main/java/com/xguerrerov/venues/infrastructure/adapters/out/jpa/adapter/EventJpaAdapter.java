@@ -1,13 +1,16 @@
 package com.xguerrerov.venues.infrastructure.adapters.out.jpa.adapter;
 
 
+import com.xguerrerov.venues.domain.model.Category;
 import com.xguerrerov.venues.domain.model.Event;
+import com.xguerrerov.venues.domain.model.State;
 import com.xguerrerov.venues.infrastructure.adapters.out.jpa.entity.EventEntity;
 import com.xguerrerov.venues.domain.ports.out.EventRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 import com.xguerrerov.venues.infrastructure.adapters.out.jpa.mapper.EventJpaMapper;
 import com.xguerrerov.venues.infrastructure.adapters.out.jpa.repository.EventJpaRepository;
@@ -55,37 +58,60 @@ public class EventJpaAdapter implements EventRepositoryPort {
         return mapper.toDomain(eventJpaRepository.save(entity));
     }
 
-
-    @Override
-    public List<Event> findByCategory(String category, int page, int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<EventEntity> result = eventJpaRepository.findByCategory(category, pageable);
-
-        return result.getContent()
-                .stream()
-                .map(mapper::toDomain)
-                .toList();
-    }
-
-    @Override
-    public List<Event> findByDateBegin(LocalDate dateBegin) {
-        return eventJpaRepository.findByDateBegin(dateBegin)
-                .stream()
-                .map(mapper::toDomain)
-                .toList();
-    }
-
-    @Override
-    public List<Event> findByVenueId(Long venueId) {
-        return eventJpaRepository.findByVenueId(venueId)
-                .stream()
-                .map(mapper::toDomain)
-                .toList();
-    }
-
     @Override
     public void deleteById(Long id) {
         eventJpaRepository.deleteById(id);
     }
+
+
+    @Override
+    public List<Event> getByCategory(String category, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<EventEntity> pageResult =
+                eventJpaRepository.getByCategory(Category.valueOf(category.toUpperCase()), pageable);
+
+        return pageResult
+                .getContent()
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Event> getByDateBegin(LocalDate dateBegin) {
+        return eventJpaRepository.getByDateBegin(dateBegin)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Event> getByDateEnd(LocalDate dateEnd) {
+        return eventJpaRepository.getByDateEnd(dateEnd)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Event> getByVenueId(Long venueId) {
+        return eventJpaRepository.getByVenueId(venueId)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Event> getByState(String state) {
+
+        State stateEnum = State.valueOf(state.toUpperCase());
+
+        return eventJpaRepository.getByState(stateEnum)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
 }

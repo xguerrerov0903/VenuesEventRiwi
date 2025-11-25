@@ -48,9 +48,16 @@ public class VenueJpaAdapter implements VenueRepositoryPort {
     }
 
     @Override
-    public List<Venue> findByCity(String city) {
-        return repository.findByCity(city).stream()
+    public List<Venue> getByCity(String city) {
+        return repository.getByCity(city)
+                .stream()
                 .map(mapper::toDomain)
                 .toList();
     }
+    @Override
+    public Optional<Venue> findByName(String name) {
+        return repository.findByName(name).map(mapper::toDomain);
+    }
+
+
 }
