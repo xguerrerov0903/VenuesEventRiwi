@@ -1,4 +1,4 @@
-package com.xguerrerov.venues.Exception;
+package com.xguerrerov.venues.domain.exceptions;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {
