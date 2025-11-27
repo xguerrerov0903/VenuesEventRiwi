@@ -29,15 +29,21 @@ public class SecurityConfig {
                 .sessionManagement(sm ->
                         sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // 1) ENDPOINTS PÚBLICOS
+
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
                                 "/swagger-resources",
-                                "/webjars/**"
+                                "/webjars/**",
+                                "/h2-console/**"
                         ).permitAll()
 
+
+                        .requestMatchers("/auth/**").permitAll()
+                        // 2) ENDPOINTS PROTEGIDOS
                         .requestMatchers(HttpMethod.GET, "/events/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/events/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/events/**").hasRole("ADMIN")
@@ -46,13 +52,13 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        // Para que funcione H2-console (frames)
+        // Para H2-console (frames)
         http.headers(headers -> headers
-                .addHeaderWriter(new XFrameOptionsHeaderWriter(
-                        XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)));
+                .frameOptions(frame -> frame.sameOrigin()));
 
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

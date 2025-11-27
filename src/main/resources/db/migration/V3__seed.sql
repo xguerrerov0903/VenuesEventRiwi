@@ -117,7 +117,13 @@ INSERT INTO events (name, date_begin, date_end, description, category, state, ve
 ('SEED EVENT 76','2026-03-26','2026-04-02','PRELOADED EVENT 76','NORMAL','ACTIVE',20);
 
 
-INSERT INTO users (email, password, role)
-VALUES ('admin@mail.com',
-        '$2a$10$wQo5z0x6fz/pX3yP9N3ROOJw6.E3K1u0bkk9eFv1RN7iN2z4Q/hdi',
-        'ADMIN');
+INSERT INTO users (email, password, role) VALUES
+('admin@mail.com',
+ '$2b$10$/9wvqOPa0qoSkCeELyXdb.ft9/nHmbfo6nRO1rtp0DIILcYKqjty2',
+ 'ADMIN'),
+('user@mail.com',
+  '$2b$10$/9wvqOPa0qoSkCeELyXdb.ft9/nHmbfo6nRO1rtp0DIILcYKqjty2',
+  'USER');
+-- contraseña: 1234
+-- token de admin: eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9BRE1JTiIsInN1YiI6ImFkbWluQG1haWwuY29tIiwiaWF0IjoxNzY0Mjc3NDkxLCJleHAiOjE3NjQyODEwOTF9.HY62Y0abky-_AJJebSPrbR07JnZGfVYKW2g6KOleNg8
+-- token de user: eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9VU0VSIiwic3ViIjoidXNlckBtYWlsLmNvbSIsImlhdCI6MTc2NDI3ODI5NiwiZXhwIjoxNzY0MjgxODk2fQ.kYmCgOJDCDMxRTK-c8aIbXeABXfYrJGDQS96UQ55_MA
