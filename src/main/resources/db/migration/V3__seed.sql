@@ -115,3 +115,9 @@ INSERT INTO events (name, date_begin, date_end, description, category, state, ve
 ('SEED EVENT 74','2026-03-24','2026-03-31','PRELOADED EVENT 74','CRAZY','ACTIVE',18),
 ('SEED EVENT 75','2026-03-25','2026-04-01','PRELOADED EVENT 75','BORING','ACTIVE',19),
 ('SEED EVENT 76','2026-03-26','2026-04-02','PRELOADED EVENT 76','NORMAL','ACTIVE',20);
+
+
+INSERT INTO users (email, password, role)
+VALUES ('admin@mail.com',
+        '$2a$10$wQo5z0x6fz/pX3yP9N3ROOJw6.E3K1u0bkk9eFv1RN7iN2z4Q/hdi',
+        'ADMIN');
