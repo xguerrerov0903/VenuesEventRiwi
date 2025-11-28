@@ -12,7 +12,7 @@ public class LoggingConfig {
     public FilterRegistrationBean<MdcFilter> mdcFilterRegistration() {
         FilterRegistrationBean<MdcFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new MdcFilter());
-        registrationBean.setOrder(1); // Se ejecuta primero
+        registrationBean.setOrder(1);
         return registrationBean;
     }
 }

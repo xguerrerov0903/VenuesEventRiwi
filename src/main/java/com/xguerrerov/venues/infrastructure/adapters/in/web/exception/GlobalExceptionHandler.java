@@ -6,12 +6,18 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+
 import jakarta.servlet.http.HttpServletRequest;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.net.URI;
 import java.time.LocalDateTime;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -33,6 +40,7 @@ public class GlobalExceptionHandler {
             HttpServletRequest request,
             String errorCode
     ) {
+
         ProblemDetail pd = ProblemDetail.forStatus(status);
         pd.setTitle(title);
         pd.setDetail(detail);
@@ -52,6 +60,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ProblemDetail handleNotFound(NotFoundException ex, HttpServletRequest request) {
+
+        log.warn("NOT_FOUND en {}: {}", request.getRequestURI(), ex.getMessage());
+
         return buildError(
                 HttpStatus.NOT_FOUND,
                 "Resource Not Found",
@@ -63,6 +74,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
     public ProblemDetail handleBadRequest(BadRequestException ex, HttpServletRequest request) {
+
+        log.warn("BAD_REQUEST en {}: {}", request.getRequestURI(), ex.getMessage());
+
         return buildError(
                 HttpStatus.BAD_REQUEST,
                 "Bad Request",
@@ -83,6 +97,8 @@ public class GlobalExceptionHandler {
                 .map(e -> e.getField() + ": " + e.getDefaultMessage())
                 .reduce("", (a, b) -> a + b + "; ");
 
+        log.warn("VALIDATION_ERROR en {}: {}", request.getRequestURI(), errors);
+
         return buildError(
                 HttpStatus.BAD_REQUEST,
                 "Validation Error",
@@ -93,7 +109,7 @@ public class GlobalExceptionHandler {
     }
 
     // ==========================
-    // ERRORES DE AUTENTICACIÓN JWT
+    // ERRORES JWT
     // ==========================
 
     @ExceptionHandler({
@@ -103,6 +119,9 @@ public class GlobalExceptionHandler {
             UnsupportedJwtException.class
     })
     public ProblemDetail handleJwtInvalid(Exception ex, HttpServletRequest request) {
+
+        log.warn("JWT_INVALID en {}: {}", request.getRequestURI(), ex.getMessage());
+
         return buildError(
                 HttpStatus.UNAUTHORIZED,
                 "Invalid Token",
@@ -114,6 +133,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ExpiredJwtException.class)
     public ProblemDetail handleJwtExpired(ExpiredJwtException ex, HttpServletRequest request) {
+
+        log.warn("JWT_EXPIRED en {}: {}", request.getRequestURI(), ex.getMessage());
+
         return buildError(
                 HttpStatus.UNAUTHORIZED,
                 "Token Expired",
@@ -129,6 +151,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ProblemDetail handleAccessDenied(AccessDeniedException ex, HttpServletRequest request) {
+
+        log.warn("FORBIDDEN en {}: acceso denegado", request.getRequestURI());
+
         return buildError(
                 HttpStatus.FORBIDDEN,
                 "Access Denied",
@@ -139,11 +164,13 @@ public class GlobalExceptionHandler {
     }
 
     // ==========================
-    // ERROR GENERICO
+    // ERROR GENERICO 500
     // ==========================
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleGeneral(Exception ex, HttpServletRequest request) {
+
+        log.error("INTERNAL_ERROR en {}: {}", request.getRequestURI(), ex.getMessage(), ex);
 
         return buildError(
                 HttpStatus.INTERNAL_SERVER_ERROR,
@@ -153,5 +180,4 @@ public class GlobalExceptionHandler {
                 "INTERNAL_ERROR"
         );
     }
-
 }
