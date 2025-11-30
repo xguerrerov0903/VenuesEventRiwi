@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15.4
+    container_name: venues-db-dev
+    environment:
+      POSTGRES_DB: venues
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - venues_data:/var/lib/postgresql/data
+    networks:
+      - venues-net
+
+  app:
+    build: .
+    container_name: venues-app-dev
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/venues
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_FLYWAY_ENABLED: true
+      SPRING_FLYWAY_LOCATIONS: classpath:db/migration
+    ports:
+      - "8080:8080"
+    networks:
+      - venues-net
+
+networks:
+  venues-net:
+
+volumes:
+  venues_data:
