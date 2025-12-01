@@ -119,11 +119,12 @@ INSERT INTO events (name, date_begin, date_end, description, category, state, ve
 
 INSERT INTO users (email, password, role) VALUES
 ('admin@mail.com',
- '$2b$10$/9wvqOPa0qoSkCeELyXdb.ft9/nHmbfo6nRO1rtp0DIILcYKqjty2',
+ '$2a$10$7nJmQIG8AjtKq6qXd.5qCOIx8FNHVq1urtsBqIk.zd4VxAOYJpa2C',
  'ADMIN'),
 ('user@mail.com',
-  '$2b$10$/9wvqOPa0qoSkCeELyXdb.ft9/nHmbfo6nRO1rtp0DIILcYKqjty2',
-  'USER');
+ '$2a$10$7nJmQIG8AjtKq6qXd.5qCOIx8FNHVq1urtsBqIk.zd4VxAOYJpa2C',
+ 'USER');
+
 -- contraseña: 1234
 -- token de admin: eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9BRE1JTiIsInN1YiI6ImFkbWluQG1haWwuY29tIiwiaWF0IjoxNzY0Mjc3NDkxLCJleHAiOjE3NjQyODEwOTF9.HY62Y0abky-_AJJebSPrbR07JnZGfVYKW2g6KOleNg8
 -- token de user: eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9VU0VSIiwic3ViIjoidXNlckBtYWlsLmNvbSIsImlhdCI6MTc2NDI3ODI5NiwiZXhwIjoxNzY0MjgxODk2fQ.kYmCgOJDCDMxRTK-c8aIbXeABXfYrJGDQS96UQ55_MA

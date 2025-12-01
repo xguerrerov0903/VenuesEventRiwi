@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
-import org.springframework.stereotype.Component;
+
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -38,11 +38,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // ---------------------------------------------------------------------------------
         // 1. IGNORAR RUTAS /auth*
         // ---------------------------------------------------------------------------------
-        if (path.startsWith("/auth")) {
+        if (path.matches("^/auth(/.*)?$")) {
             log.debug("Ruta {} ignorada por JwtAuthenticationFilter (endpoint público)", path);
             filterChain.doFilter(request, response);
             return;
         }
+
 
         // ---------------------------------------------------------------------------------
         // 2. EXTRAER TOKEN DEL HEADER
