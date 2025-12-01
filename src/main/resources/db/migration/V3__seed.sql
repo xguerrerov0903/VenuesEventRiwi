@@ -119,11 +119,13 @@ INSERT INTO events (name, date_begin, date_end, description, category, state, ve
 
 INSERT INTO users (email, password, role) VALUES
 ('admin@mail.com',
- '$2a$10$7nJmQIG8AjtKq6qXd.5qCOIx8FNHVq1urtsBqIk.zd4VxAOYJpa2C',
+ '$2a$10$H6QhSbYmosw5mzbAV/Qx8ur2RvsTGj7n5RgvXh4puYYfbYaQ/52sG',
  'ADMIN'),
+
 ('user@mail.com',
- '$2a$10$7nJmQIG8AjtKq6qXd.5qCOIx8FNHVq1urtsBqIk.zd4VxAOYJpa2C',
+ '$2a$10$H6QhSbYmosw5mzbAV/Qx8ur2RvsTGj7n5RgvXh4puYYfbYaQ/52sG',
  'USER');
+
 
 -- contraseña: 1234
 -- token de admin: eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9BRE1JTiIsInN1YiI6ImFkbWluQG1haWwuY29tIiwiaWF0IjoxNzY0Mjc3NDkxLCJleHAiOjE3NjQyODEwOTF9.HY62Y0abky-_AJJebSPrbR07JnZGfVYKW2g6KOleNg8
