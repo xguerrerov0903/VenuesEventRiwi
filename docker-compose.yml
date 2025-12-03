@@ -28,7 +28,7 @@ services:
       SPRING_FLYWAY_ENABLED: true
       SPRING_FLYWAY_LOCATIONS: classpath:db/migration
     ports:
-      - "8080:8080"
+      - "8081:8081"
     networks:
       - venues-net
 

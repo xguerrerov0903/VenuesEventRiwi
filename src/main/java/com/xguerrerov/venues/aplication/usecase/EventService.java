@@ -5,6 +5,8 @@ import com.xguerrerov.venues.domain.model.Venue;
 import com.xguerrerov.venues.domain.ports.in.*;
 import com.xguerrerov.venues.domain.ports.out.EventRepositoryPort;
 import com.xguerrerov.venues.domain.ports.out.VenueRepositoryPort;
+import com.xguerrerov.venues.infrastructure.metrics.EventsMetrics;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class EventService implements
         DeleteEventUseCase,
         GetEventUseCase {
 
+    private final EventsMetrics metrics;
     private final EventRepositoryPort eventRepositoryPort;
     private final VenueRepositoryPort venueRepositoryPort;
 
@@ -57,6 +60,7 @@ public class EventService implements
 
         Event saved = eventRepositoryPort.save(event);
         log.info("Evento creado exitosamente con ID: {}", saved.getId());
+        metrics.incrementCreated();
 
         return saved;
     }
@@ -95,6 +99,7 @@ public class EventService implements
 
         Event updated = eventRepositoryPort.save(event);
         log.info("Evento actualizado exitosamente con ID: {}", updated.getId());
+        metrics.incrementUpdated();
 
         return updated;
     }
@@ -117,6 +122,7 @@ public class EventService implements
 
         eventRepositoryPort.deleteById(id);
         log.info("Evento eliminado exitosamente con ID: {}", id);
+        metrics.incrementDeleted();
     }
 
     // ============================================================

@@ -6,6 +6,8 @@ import com.xguerrerov.venues.domain.ports.in.DeleteVenueUseCase;
 import com.xguerrerov.venues.domain.ports.in.GetVenueUseCase;
 import com.xguerrerov.venues.domain.ports.in.UpdateVenueUseCase;
 import com.xguerrerov.venues.domain.ports.out.VenueRepositoryPort;
+import com.xguerrerov.venues.infrastructure.metrics.EventsMetrics;
+import com.xguerrerov.venues.infrastructure.metrics.VenuesMetrics;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class VenueService implements
         DeleteVenueUseCase,
         GetVenueUseCase {
 
+    private final VenuesMetrics metrics;
     private final VenueRepositoryPort venueRepositoryPort;
 
     // ============================================================
@@ -42,6 +45,7 @@ public class VenueService implements
         Venue saved = venueRepositoryPort.save(venue);
 
         log.info("Venue creado exitosamente con ID: {}", saved.getId());
+        metrics.incrementCreated();
         return saved;
     }
 
@@ -69,6 +73,7 @@ public class VenueService implements
         Venue updated = venueRepositoryPort.save(venue);
 
         log.info("Venue actualizado exitosamente con ID: {}", updated.getId());
+        metrics.incrementUpdated();
         return updated;
     }
 
@@ -92,6 +97,7 @@ public class VenueService implements
         venueRepositoryPort.deleteById(id);
 
         log.info("Venue eliminado exitosamente con ID: {}", id);
+        metrics.incrementDeleted();
     }
 
     // ============================================================

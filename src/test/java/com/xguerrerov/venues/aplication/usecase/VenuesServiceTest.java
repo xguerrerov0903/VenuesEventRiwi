@@ -24,6 +24,7 @@ class VenuesServiceTest {
     @InjectMocks
     private VenueService venueService;
 
+
     // Helper para crear un Venue básico
     private Venue createVenue() {
         Venue v = new Venue();
