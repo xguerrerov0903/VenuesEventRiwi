@@ -2,6 +2,7 @@ package com.xguerrerov.venues.aplication.usecase;
 
 import com.xguerrerov.venues.domain.model.Venue;
 import com.xguerrerov.venues.domain.ports.out.VenueRepositoryPort;
+import com.xguerrerov.venues.infrastructure.metrics.VenuesMetrics;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -17,6 +18,9 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class VenuesServiceTest {
+
+    @Mock
+    private VenuesMetrics metrics;
 
     @Mock
     private VenueRepositoryPort venueRepositoryPort;

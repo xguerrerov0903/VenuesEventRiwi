@@ -5,10 +5,13 @@ import com.xguerrerov.venues.domain.model.State;
 import com.xguerrerov.venues.domain.model.Venue;
 import com.xguerrerov.venues.domain.ports.out.EventRepositoryPort;
 import com.xguerrerov.venues.domain.ports.out.VenueRepositoryPort;
+import com.xguerrerov.venues.infrastructure.metrics.EventsMetrics;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -21,6 +24,10 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class EventServiceTest {
+
+
+    @Mock
+    private EventsMetrics metrics;
 
     @Mock
     private EventRepositoryPort eventRepositoryPort;
